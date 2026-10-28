@@ -106,6 +106,12 @@ img{display:block;max-width:100%}
 .drawer[data-s=pentagon] .handle{--c0:polygon(0 0,50% 0,100% 0,100% 100%,0 100%);--c1:polygon(0 38.2%,50% 0,100% 38.2%,80.9% 100%,19.1% 100%);--hh:20.92cqw;--hr:0}
 .drawer[data-s=hexagon] .handle{--c0:polygon(0 0,0 0,100% 0,100% 0,100% 100%,0 100%);--c1:polygon(0 50%,25% 0,75% 0,100% 50%,75% 100%,25% 100%);--hh:19.05cqw;--hr:0}
 .drawer[data-s=diamond] .handle{--c0:polygon(0 0,100% 0,100% 100%,0 100%);--c1:polygon(50% 0,100% 50%,50% 100%,0 50%);--hh:22cqw;--hr:0}
+@property --hole{syntax:'<percentage>';inherits:true;initial-value:0%}
+.drawer[data-s=ring] .handle{--c0:none;--c1:none;--hh:22cqw;--hr:50%;--h1:50%}
+.drawer[data-s=arch] .handle{--c0:polygon(0 0,100% 0,100% 100%,0 100%);--c1:polygon(0 0,100% 0,100% 50%,0 50%);--hh:22cqw;--hr:50%;--h1:50%}
+.drawer[data-s=ring] .handle,.drawer[data-s=arch] .handle{-webkit-mask:radial-gradient(circle closest-side,transparent var(--hole),#000 calc(var(--hole) + .5%));mask:radial-gradient(circle closest-side,transparent var(--hole),#000 calc(var(--hole) + .5%));transition:--hole .5s var(--ease) .1s,top .45s var(--io),left .35s var(--io),height .35s var(--ease) .22s,border-radius .35s var(--ease) .22s,clip-path .35s var(--ease) .22s,transform .45s var(--ease) .2s}
+.drawer[data-s=ring]:hover .handle,.drawer[data-s=arch]:hover .handle{--hole:var(--h1)}
+.drawer.empty[data-s=ring]:hover .handle,.drawer.empty[data-s=arch]:hover .handle{transition:--hole .5s var(--ease) .25s,transform .7s var(--ease) 0s,height .55s var(--spring) .08s,border-radius .5s var(--ease) .08s,clip-path .55s var(--spring) .08s,top .55s var(--spring) .08s}
 .drawer:hover .handle,.drawer:focus-visible .handle,.drawer.open .handle{height:var(--hh);border-radius:var(--hr);clip-path:var(--c1)}
 .drawer.empty:hover .handle{top:calc(50% - var(--hh) / 2);transform:rotate(var(--rot,0deg))}
 .drawer .no{max-width:calc(100% - 22cqw - 14px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
