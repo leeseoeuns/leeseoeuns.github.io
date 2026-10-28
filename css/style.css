@@ -166,7 +166,7 @@ img{display:block;max-width:100%}
 .mode-card p{font-family:var(--kr);font-size:13px;color:var(--mute)}
 .mode-card .sh{width:28px;height:28px;margin-bottom:16px;transition:transform .8s var(--spring)}
 .mode-card:hover .sh{transform:rotate(90deg) scale(1.15)}
-.foot{display:flex;justify-content:space-between;gap:16px;padding:28px var(--gutter);font-size:13px;color:var(--mute);border-top:1px solid var(--line)}
+.foot{display:flex;justify-content:space-between;gap:16px;padding:28px var(--gutter);font-size:13px;color:var(--mute)}
 
 @media (max-width:900px){
   .cabinet{grid-template-columns:repeat(4,1fr);gap:10px}
@@ -292,15 +292,15 @@ img{display:block;max-width:100%}
 @media (prefers-reduced-motion:reduce){*{transition-duration:.01s!important;animation-duration:.01s!important}}
 
 /* ---------- about · contact ---------- */
-.about{display:grid;grid-template-columns:1fr 2fr;gap:40px;border-top:1px solid var(--line)}
+.about{display:grid;grid-template-columns:1fr 2fr;gap:40px}
 .about h2{font-size:24px;font-weight:600}
 .about .who b{display:block;font-family:var(--kr);font-size:24px;font-weight:600}
 .about .who span{display:block;font-size:14px;color:var(--mute);margin-top:4px}
 .mail{display:inline-flex;margin-top:28px;font-size:clamp(20px,2.4vw,32px);letter-spacing:-.01em;border-bottom:1px solid var(--ink);padding-bottom:4px}
-.facts{display:grid;grid-template-columns:repeat(2,1fr);gap:36px 40px;margin-top:56px}
+.facts{display:grid;grid-template-columns:1fr;gap:36px;margin-top:48px;max-width:640px}
 .facts h3{font-size:13px;font-weight:500;color:var(--mute);margin-bottom:12px}
 .facts ul{list-style:none;font-family:var(--kr);font-size:14px;line-height:1.7}
-.facts li{display:flex;gap:16px;padding:8px 0;border-top:1px solid var(--line)}
+.facts li{display:flex;gap:16px;padding:6px 0}
 .facts li em{font-style:normal;font-family:var(--sans);color:var(--mute);width:48px;flex:none;white-space:nowrap}
 .facts .tools{display:flex;flex-wrap:wrap;gap:8px}
 .facts .tools span{font-family:var(--sans);font-size:13px;padding:6px 12px;border:1px solid var(--line);border-radius:999px}
@@ -323,3 +323,4 @@ img{display:block;max-width:100%}
   .sub{font-size:14px}
   .end{padding:80px 0 120px}
 }
+.about .who p{font-size:14px;margin-top:10px}
