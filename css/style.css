@@ -639,3 +639,9 @@ img{display:block;max-width:100%}
 html.arr-w::after{content:"";position:fixed;inset:0;z-index:899;background:var(--arr)}
 /* PC: three rows for now (6 × 3) — the fourth row comes back once the drawers fill past ~10 */
 @media (min-width:901px){.cabinet .drawer:nth-child(n+19){display:none}}
+/* Others: the colour cover fades away right away on hover (no waiting for the shape to spin) */
+.g-item:hover .g-cover,.g-item:focus-visible .g-cover{transition:opacity .45s var(--ease) 0s,transform .5s var(--ease) 0s!important}
+.g-item:hover .g-shape,.g-item:focus-visible .g-shape{transform:none!important}
+.g-item:hover .g-prev,.g-item.has-prev:hover .g-prev{transition:none!important}
+.g-item:hover>img{transition-delay:0s!important}
+.g-item:hover .g-tip{transition-delay:.15s!important}
