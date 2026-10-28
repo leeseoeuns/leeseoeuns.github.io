@@ -51,10 +51,10 @@
     const img = d.querySelector('.cover');
     setTimeout(() => {
       const b = img.getBoundingClientRect(); const f = img.cloneNode(); f.className = 'flying';
-      Object.assign(f.style, { left: b.left + 'px', top: b.top + 'px', width: b.width + 'px', height: b.height + 'px', transform: 'rotate(4deg)' });
+      Object.assign(f.style, { left: b.left + 'px', top: b.top + 'px', width: b.width + 'px', height: b.height + 'px', transform: 'none' });
       document.body.appendChild(f); void f.offsetWidth;
       const W = Math.min(innerWidth * .8, 1100), H = W * 9 / 16;
-      Object.assign(f.style, { left: (innerWidth - W) / 2 + 'px', top: (innerHeight - H) / 2 + 'px', width: W + 'px', height: H + 'px', transform: 'rotate(0deg)' });
+      Object.assign(f.style, { left: (innerWidth - W) / 2 + 'px', top: (innerHeight - H) / 2 + 'px', width: W + 'px', height: H + 'px', transform: 'none' });
       setTimeout(() => go('room.html?r=' + r.no, r.dark ? '#1C1428' : r.paper), 620);
     }, 520);
   }
