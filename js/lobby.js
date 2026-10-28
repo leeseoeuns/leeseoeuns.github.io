@@ -34,7 +34,7 @@
     d.dataset.s = r ? r.shape : GRID[i];
     if (r) {
       d.href = 'room.html?r=' + r.no; d.setAttribute('aria-label', `Room ${r.no} — ${r.en}, ${r.ko}`);
-      d.innerHTML = `<div class="cavity"></div><img class="cover" src="${r.pages[0].src}" alt="" loading="lazy">
+      d.innerHTML = `<div class="cavity"></div><img class="cover" src="${r.pages[0].src}?v=3" alt="" loading="lazy">
         <div class="front" style="--h:${r.accent}"><span class="handle"></span><span class="no">${r.no}<em>${r.en}</em></span><span class="t">${r.en}</span></div>`;
       d.addEventListener('click', e => { e.preventDefault(); fly(d, r); });
     } else {
