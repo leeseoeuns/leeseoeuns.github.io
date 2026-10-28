@@ -633,3 +633,8 @@ img{display:block;max-width:100%}
 .device.ready .d-load{display:none}
 .try-hint{font-size:13px;color:var(--mute);letter-spacing:.01em}
 @media (max-width:900px){.try-stage{min-height:auto;padding:24px var(--gutter) 8px}}
+/* colour curtain (wardrobe → try room): rises from the bottom, then slides down off the next page */
+.curtain.wipe{visibility:visible;background:var(--bg)!important;transform:translateY(100%)!important;transition:transform .7s var(--io)}
+.curtain.wipe.up{transform:none!important;pointer-events:auto}
+.curtain.wipe.down{transform:translateY(100%)!important;transition:transform .75s var(--io)}
+html.arr-w::after{content:"";position:fixed;inset:0;z-index:899;background:var(--arr)}

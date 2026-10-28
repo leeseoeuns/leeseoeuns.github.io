@@ -38,7 +38,7 @@
         <div class="doors" style="--h:${r.accent}"><div class="door l"><span class="no">${r.no}</span><span class="t">${r.en}</span><i class="knob"></i></div><div class="door r"><i class="knob"></i></div></div>`;
       d.addEventListener('click', e => { const a = e.target.closest('.half'); e.preventDefault();
         if (!a || !d.matches('.open, :hover')) { d.classList.add('open'); return; }   // first tap on a phone opens the doors, the second picks a side
-        go(a.getAttribute('href'), r.paper); });
+        go(a.getAttribute('href'), r.accent, 'wipe'); });
       if (matchMedia('(hover:hover)').matches) d.addEventListener('mouseleave', () => d.classList.remove('open'));
       else document.addEventListener('click', e => { if (!d.contains(e.target)) d.classList.remove('open'); });
     } else if (r) {
