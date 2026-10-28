@@ -476,3 +476,12 @@ img{display:block;max-width:100%}
 @media (max-width:900px){.gallery{--col:calc((100vw - 2*var(--gutter) - 10px)/2)}}
 @media (hover:none){.g-item.has-prev>img{opacity:1}.g-prev,.g-item.has-prev .g-prev{display:none}.g-item>img,.g-item>.ph{filter:none}}
 .pill[hidden]{display:none!important}
+/* Others: no blur on previews (sharp), viewer swaps instantly with a short fade */
+.g-prev>span>img,.g-item>img,.g-item>.ph,.g-vid{filter:none}
+.v-stage{transition:none}
+.v-stage.pop{animation:vpop .22s var(--ease)}
+@keyframes vpop{from{opacity:.35}to{opacity:1}}
+/* Profile closes the way it came: slides back out to the left */
+.profile{transition:transform .7s var(--io),visibility 0s linear .7s}
+.profile.show{transition:transform .7s var(--io),visibility 0s}
+.profile:not(.show) .reveal-p{transition-delay:0s!important;transition-duration:.3s}

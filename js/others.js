@@ -14,7 +14,7 @@ window.OTHERS = [
   { kind: 'motion', s: 'wide', info: ["올빼미", "Motion Graphic · 영화 인트로"], images: [], poster: 'assets/others/motion/final.jpg', video: 'assets/others/motion/final.mp4', r: .5625 },
   { kind: 'surface', s: 'tall', info: ['넥타이 · Orange', 'Surface Design · 넥타이 디자인 · 착용 촬영'], images: ['assets/others/tie/o03.jpg','assets/others/tie/o01.jpg','assets/others/tie/o02.jpg','assets/others/tie/o04.jpg','assets/others/tie/o05.jpg','assets/others/tie/o06.jpg','assets/others/tie/o07.jpg'], r: 1.333 },
   { kind: 'surface', s: 'tall', info: ['넥타이 · Blue', 'Surface Design · 넥타이 디자인 · 착용 촬영'], images: ['assets/others/tie/b05.jpg','assets/others/tie/b01.jpg','assets/others/tie/b02.jpg','assets/others/tie/b03.jpg','assets/others/tie/b04.jpg','assets/others/tie/b06.jpg','assets/others/tie/b07.jpg'], r: 1.333 },
-  { kind: 'textile', s: 'big', info: ['태양 · 목성 · 해왕성', 'Textile · 손으로 엮은 작품 · 행성을 소재로'], images: ['assets/others/textile/h01.jpg','assets/others/textile/h04.jpg','assets/others/textile/h07.jpg','assets/others/textile/h02.jpg','assets/others/textile/h05.jpg','assets/others/textile/h08.jpg','assets/others/textile/h03.jpg','assets/others/textile/h06.jpg','assets/others/textile/h09.jpg'], r: 1.414 },
+  { kind: 'textile', s: 'big', info: ['위빙', 'Textile · 손으로 엮은 작품 · 행성을 소재로'], images: ['assets/others/textile/h01.jpg','assets/others/textile/h04.jpg','assets/others/textile/h07.jpg','assets/others/textile/h02.jpg','assets/others/textile/h05.jpg','assets/others/textile/h08.jpg','assets/others/textile/h03.jpg','assets/others/textile/h06.jpg','assets/others/textile/h09.jpg'], r: 1.414 },
   { kind: 'textile', s: 'tall', info: ['초 · 피터사이트 · 호피석', 'Textile · Weaving'], images: ['assets/others/textile/w01.jpg','assets/others/textile/w02.jpg','assets/others/textile/w03.jpg','assets/others/textile/w04.jpg','assets/others/textile/w05.jpg','assets/others/textile/w06.jpg'], r: 1.333 },
   { kind: 'motion', s: 'wide', info: ['Motion Graphic', 'Motion Graphic'], images: [], poster: 'assets/others/motion/mid.jpg', video: 'assets/others/motion/mid.mp4', r: .5625 }
 ];
@@ -33,7 +33,7 @@ window.IMG_R = {"assets/others/graphic/01.jpg": 1.4111, "assets/others/graphic/b
   // hover preview: several images in a grid whose cells match the images' shape (little cropping)
   const SPAN = { big: [2, 2], tall: [1, 2], wide: [2, 1] }, ROW = 1.1;   // row height = 1.1 × column width
   const LAY = [ // name, cell shapes as multiples of the tile ratio
-    ['n9', Array(9).fill(1)], ['q6', Array(6).fill(1.5)], ['q4', [1, 1, 1, 1]], ['l3', [2, 1, 1]],
+    ['q4', [1, 1, 1, 1]], ['l3', [2, 1, 1]],   // at most 4 images per preview
     ['c4', [4, 4, 4, 4]], ['c3', [3, 3, 3]], ['c2', [2, 2]], ['r3', [1 / 3, 1 / 3, 1 / 3]], ['r2', [.5, .5]]];
   function layout(w) {
     if (!hasImg(w) || w.images.length < 2) return null;
@@ -69,9 +69,10 @@ window.IMG_R = {"assets/others/graphic/01.jpg": 1.4111, "assets/others/graphic/b
     const cover = `<div class="g-cover" style="background:${tint(w, 18)}"><span class="g-shape">${SHAPE_SVG(KIND[w.kind][0], KIND[w.kind][1])}</span></div>`;
     el.innerHTML = main + prev + vid + play + cover + info;
     const v = el.querySelector('.g-vid'); let vt;
-    if (v) { el.addEventListener('mouseenter', () => { vt = setTimeout(() => { v.play().catch(() => {}); el.classList.add('playing'); }, 700); });
+    if (v) { el.addEventListener('mouseenter', () => { vt = setTimeout(() => { v.currentTime = 0; v.play().catch(() => {}); el.classList.add('playing'); }, 3000); });   // plays only after a 3s hover
       el.addEventListener('mouseleave', () => { clearTimeout(vt); v.pause(); el.classList.remove('playing'); }); }
     el.addEventListener('click', e => { if (e.target.closest('.g-info')) return; setTimeout(() => open(i), 90); });
+    el.addEventListener('pointerenter', () => preload(w), { once: true });   // fetch the full set while hovering, so the viewer opens instantly
     el.addEventListener('keydown', e => { if (e.key === 'Enter') open(i); });
     g.appendChild(el);
   });
@@ -80,17 +81,16 @@ window.IMG_R = {"assets/others/graphic/01.jpg": 1.4111, "assets/others/graphic/b
   // viewer
   const V = $('viewer'), stage = $('vStage'), dots = $('vDots'), vinfo = $('vInfo'); let wi = 0, si = 0;
   function slides(w) { const S = []; if (hasImg(w)) w.images.forEach(s => S.push({ img: s })); if (w.video) S.push({ video: w.video }); else if (!S.length) for (let k = 0; k < (w.n || 1); k++) S.push({ ph: true }); return S; }
-  function open(i) { wi = i; si = 0; V.hidden = false; requestAnimationFrame(() => V.classList.add('show')); document.body.style.overflow = 'hidden'; render(); }
+  const cache = {};
+  const preload = w => (w.images || []).forEach(src => { if (!cache[src]) { const im = new Image(); im.decoding = 'async'; im.src = src; cache[src] = im; } });
+  function open(i) { wi = i; si = 0; preload(OTHERS[i]); V.hidden = false; requestAnimationFrame(() => V.classList.add('show')); document.body.style.overflow = 'hidden'; render(); }
   function close() { V.classList.remove('show'); document.body.style.overflow = ''; setTimeout(() => { V.hidden = true; stage.innerHTML = ''; }, 450); }
   function embed(u) { const y = ytId(u); if (y) return `<iframe class="${/shorts/.test(u) ? 'tall' : ''}" src="https://www.youtube.com/embed/${y}?autoplay=1&rel=0&playsinline=1" allow="autoplay; fullscreen; encrypted-media" allowfullscreen></iframe>`;
     const v = u.match(/vimeo\.com\/(\d+)/); if (v) return `<iframe src="https://player.vimeo.com/video/${v[1]}?autoplay=1" allow="autoplay; fullscreen" allowfullscreen></iframe>`; return `<video src="${u}" controls autoplay playsinline></video>`; }
   function render() {
     const w = OTHERS[wi], S = slides(w), s = S[si];
-    stage.classList.add('swap');
-    setTimeout(() => {
       stage.innerHTML = s.video ? embed(s.video) : s.img ? `<img src="${s.img}" alt="">` : `<div class="ph" style="aspect-ratio:${w.kind === 'motion' ? '16/9' : '1/' + w.r};background:${tint(w, 30)}">${w.kind === 'motion' ? '<i class="g-play big"></i>' : ''}</div>`;
-      stage.classList.remove('swap');
-    }, 180);
+    stage.classList.remove('pop'); void stage.offsetWidth; stage.classList.add('pop');
     dots.innerHTML = S.length > 1 ? S.map((_, k) => `<button class="${k === si ? 'on' : ''}" aria-label="${k + 1}"></button>`).join('') : '';
     dots.querySelectorAll('button').forEach((b, k) => b.onclick = () => { si = k; render(); });
     vinfo.innerHTML = w.info ? `<span class="g-info show">${SHAPE_SVG(KIND[w.kind][0], KIND[w.kind][1])}<span class="g-tip"><b>${w.info[0]}</b>${w.info[1] || ''}</span></span>` : '';
