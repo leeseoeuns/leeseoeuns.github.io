@@ -204,7 +204,7 @@ window.ROOMS = [
     17
    ]
   ],
-  "link": "https://m.site.naver.com/2jbdb"
+  "link": "https://bibridge2026-dev.github.io/bcwp.2026/"
  },
  {
   "no": "02",
