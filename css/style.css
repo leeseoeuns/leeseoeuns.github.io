@@ -365,7 +365,7 @@ img{display:block;max-width:100%}
 .pf-list li{display:flex;gap:16px;padding:3px 0;font-size:15px}
 .pf-list em{font-style:normal;font-family:var(--sans);color:var(--mute);width:40px;flex:none}
 .pf-lang{list-style:none;display:flex;flex-direction:column;gap:12px;max-width:420px}
-.pf-lang li{display:grid;grid-template-columns:80px 1fr;align-items:center;font-size:15px}
+.pf-lang li{display:grid;grid-template-columns:72px 1fr;align-items:center;font-size:12px;color:var(--mute)}
 .pf-lang i{display:block;height:4px;border-radius:2px;background:linear-gradient(var(--ink),var(--ink)) no-repeat 0 0/calc(var(--v) * 100%) 100%,rgba(17,17,17,.1)}
 .profile.show .pf-lang i{animation:bar 1.1s var(--ease) .6s both}
 @keyframes bar{from{background-size:0 100%,100% 100%}}
@@ -424,3 +424,9 @@ img{display:block;max-width:100%}
 @media (max-width:900px){.gallery{columns:2 150px;column-gap:10px;padding-top:90px}.g-item{margin-bottom:10px}.g-info .g-tip{white-space:normal;width:180px}.v-stage{width:92vw;height:70vh}.v-arrow{display:none}}
 .viewer[hidden]{display:none}
 @media (max-width:560px){.nav{padding:20px 16px;font-size:13px}.nav ul{gap:12px}}
+.v-stage iframe.tall{width:auto;height:100%;aspect-ratio:9/16}
+/* info: bigger hit area, and the note also rises softly when the card is hovered */
+.g-info{width:30px;height:30px;right:2px;bottom:2px;display:grid;place-items:center}
+.g-info>svg{width:14px;height:14px}
+.g-item:hover .g-tip{opacity:1;transform:none;transition-delay:.35s}
+.g-tip{right:6px;bottom:30px}

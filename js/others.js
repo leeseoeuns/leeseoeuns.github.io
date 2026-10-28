@@ -6,7 +6,7 @@
 window.OTHERS = [
   { kind: 'package', info: ['바스리후레 패키지 리디자인', 'Package Design · 2026'], images: [], r: 1.25, n: 4 },
   { kind: 'surface', info: ['스카프 디자인', 'Surface Design'], images: [], r: 1, n: 3 },
-  { kind: 'graphic', info: ['포스터 · 리플렛', 'Graphic Design · 홍보 영상 포함'], images: [], r: 1.4, n: 3 },
+  { kind: 'graphic', info: ['포스터 · 리플렛', 'Graphic Design 1 · 모션 포스터 포함'], images: [], video: 'https://youtube.com/shorts/wv9fSH_8VlI', r: 1.4, n: 3 },
   { kind: 'motion', info: ['모션그래픽 01', 'Motion Graphic'], images: [], video: '', r: .5625, n: 1 },
   { kind: 'surface', info: ['넥타이 디자인', 'Surface Design'], images: [], r: 1.33, n: 2 },
   { kind: 'textile', info: ['Weaving · Handwoven', 'Textile · 6 pieces'], images: [], r: .75, n: 6 },
@@ -18,19 +18,21 @@ window.OTHERS = [
   const C = SHAPE_COLORS;
   const KIND = { package: ['square', C.ink], surface: ['circle', C.blue], graphic: ['pentagon', C.green], motion: ['triangle', C.pink], textile: ['star', C.orange] };
   const g = document.getElementById('gallery'), $ = id => document.getElementById(id);
+  const ytId = u => { const m = (u || '').match(/(?:youtu\.be\/|v=|shorts\/|embed\/)([\w-]{11})/); return m && m[1]; };
   const hasImg = w => w.images && w.images.length;
   const tint = (w, op) => `color-mix(in srgb, ${KIND[w.kind][1]} ${op}%, var(--paper))`;
 
   // preview layout on hover: 2–4 cells, picked by how many images and their orientation
-  function cells(w) { const n = hasImg(w) ? w.images.length : (w.n || 1); if (n < 2) return 0; if (n === 2) return 2; return w.r >= 1 ? 3 : 4; }
+  function cells(w) { if (!hasImg(w) && w.video) return 0; const n = hasImg(w) ? w.images.length : (w.n || 1); if (n < 2) return 0; if (n === 2) return 2; return w.r >= 1 ? 3 : 4; }
 
   OTHERS.forEach((w, i) => {
     const el = document.createElement('figure'); el.className = 'g-item'; el.tabIndex = 0; el.style.setProperty('--i', i);
     const k = cells(w);
-    const main = hasImg(w) ? `<img src="${w.images[0]}" alt="${w.info ? w.info[0] : ''}" loading="lazy">` : `<div class="ph" style="aspect-ratio:1/${w.r};background:${tint(w, 16)}"></div>`;
+    const yt = w.video && ytId(w.video);
+    const main = !hasImg(w) && yt ? `<img src="https://i.ytimg.com/vi/${yt}/hqdefault.jpg" alt="${w.info ? w.info[0] : ''}" loading="lazy" style="aspect-ratio:1/${w.r};object-fit:cover">` : hasImg(w) ? `<img src="${w.images[0]}" alt="${w.info ? w.info[0] : ''}" loading="lazy">` : `<div class="ph" style="aspect-ratio:1/${w.r};background:${tint(w, 16)}"></div>`;
     let prev = '';
     if (k) { prev = `<div class="g-prev c${k}">` + Array.from({ length: k }, (_, j) => hasImg(w) && w.images[j + 1] ? `<img src="${w.images[j + 1]}" alt="" loading="lazy">` : `<span style="background:${tint(w, 22 + j * 8)}"></span>`).join('') + '</div>'; }
-    const play = w.kind === 'motion' ? '<i class="g-play"></i>' : '';
+    const play = (w.kind === 'motion' || w.video) ? '<i class="g-play"></i>' : '';
     const info = w.info ? `<span class="g-info" tabindex="0" aria-label="${w.info[0]}">${SHAPE_SVG(KIND[w.kind][0], KIND[w.kind][1])}<span class="g-tip"><b>${w.info[0]}</b>${w.info[1] || ''}</span></span>` : '';
     el.innerHTML = main + prev + play + info;
     el.addEventListener('click', e => { if (e.target.closest('.g-info')) return; setTimeout(() => open(i), 90); });
@@ -41,10 +43,10 @@ window.OTHERS = [
 
   // viewer
   const V = $('viewer'), stage = $('vStage'), dots = $('vDots'), vinfo = $('vInfo'); let wi = 0, si = 0;
-  function slides(w) { if (w.video) return [{ video: w.video }]; if (hasImg(w)) return w.images.map(s => ({ img: s })); return Array.from({ length: w.n || 1 }, () => ({ ph: true })); }
+  function slides(w) { const S = []; if (w.video) S.push({ video: w.video }); if (hasImg(w)) w.images.forEach(s => S.push({ img: s })); else if (!w.video) for (let k = 0; k < (w.n || 1); k++) S.push({ ph: true }); return S; }
   function open(i) { wi = i; si = 0; V.hidden = false; requestAnimationFrame(() => V.classList.add('show')); document.body.style.overflow = 'hidden'; render(); }
   function close() { V.classList.remove('show'); document.body.style.overflow = ''; setTimeout(() => { V.hidden = true; stage.innerHTML = ''; }, 450); }
-  function embed(u) { const y = u.match(/(?:youtu\.be\/|v=)([\w-]{11})/); if (y) return `<iframe src="https://www.youtube.com/embed/${y[1]}?autoplay=1&rel=0" allow="autoplay; fullscreen" allowfullscreen></iframe>`;
+  function embed(u) { const y = ytId(u); if (y) return `<iframe class="${/shorts/.test(u) ? 'tall' : ''}" src="https://www.youtube.com/embed/${y}?autoplay=1&rel=0&playsinline=1" allow="autoplay; fullscreen; encrypted-media" allowfullscreen></iframe>`;
     const v = u.match(/vimeo\.com\/(\d+)/); if (v) return `<iframe src="https://player.vimeo.com/video/${v[1]}?autoplay=1" allow="autoplay; fullscreen" allowfullscreen></iframe>`; return `<video src="${u}" controls autoplay playsinline></video>`; }
   function render() {
     const w = OTHERS[wi], S = slides(w), s = S[si];
