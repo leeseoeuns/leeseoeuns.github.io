@@ -4,7 +4,7 @@
    video: mp4 path or YouTube/Vimeo URL for motion work.
    r: placeholder ratio (height / width) used until real images are added. */
 window.OTHERS = [
-  { kind: 'package', info: ['바스리후레 패키지 리디자인', 'Package Design · 2026'], images: [], r: 1.25, n: 4 },
+  { kind: 'package', info: ['바스리후레 패키지 리디자인', 'Package Design · 2026'], images: ['assets/others/pkg/01.jpg','assets/others/pkg/03.jpg','assets/others/pkg/04.jpg','assets/others/pkg/05.jpg','assets/others/pkg/08.jpg','assets/others/pkg/09.jpg','assets/others/pkg/10.jpg','assets/others/pkg/02.jpg','assets/others/pkg/06.jpg','assets/others/pkg/07.jpg'], r: 1.333 },
   { kind: 'surface', info: ['스카프 디자인', 'Surface Design'], images: [], r: 1, n: 3 },
   { kind: 'graphic', info: ['포스터 · 리플렛', 'Graphic Design 1 · 모션 포스터 포함'], images: [], video: 'https://youtube.com/shorts/wv9fSH_8VlI', r: 1.4, n: 3 },
   { kind: 'motion', info: ['모션그래픽 01', 'Motion Graphic'], images: [], video: '', r: .5625, n: 1 },
@@ -23,13 +23,13 @@ window.OTHERS = [
   const tint = (w, op) => `color-mix(in srgb, ${KIND[w.kind][1]} ${op}%, var(--paper))`;
 
   // preview layout on hover: 2–4 cells, picked by how many images and their orientation
-  function cells(w) { if (!hasImg(w) && w.video) return 0; const n = hasImg(w) ? w.images.length : (w.n || 1); if (n < 2) return 0; if (n === 2) return 2; return w.r >= 1 ? 3 : 4; }
+  function cells(w) { if (!hasImg(w) && w.video) return 0; const n = hasImg(w) ? w.images.length - 1 : (w.n || 1); if (n < 2) return 0; if (n === 2) return 2; return w.r >= 1 ? 3 : 4; }
 
   OTHERS.forEach((w, i) => {
     const el = document.createElement('figure'); el.className = 'g-item'; el.tabIndex = 0; el.style.setProperty('--i', i);
     const k = cells(w);
     const yt = w.video && ytId(w.video);
-    const main = !hasImg(w) && yt ? `<img src="https://i.ytimg.com/vi/${yt}/hqdefault.jpg" alt="${w.info ? w.info[0] : ''}" loading="lazy" style="aspect-ratio:1/${w.r};object-fit:cover">` : hasImg(w) ? `<img src="${w.images[0]}" alt="${w.info ? w.info[0] : ''}" loading="lazy">` : `<div class="ph" style="aspect-ratio:1/${w.r};background:${tint(w, 16)}"></div>`;
+    const main = !hasImg(w) && yt ? `<img src="https://i.ytimg.com/vi/${yt}/hqdefault.jpg" alt="" loading="lazy" onerror="this.style.background='${tint(w, 16)}';this.removeAttribute('src')" style="aspect-ratio:1/${w.r};object-fit:cover">` : hasImg(w) ? `<img src="${w.images[0]}" alt="${w.info ? w.info[0] : ''}" loading="lazy">` : `<div class="ph" style="aspect-ratio:1/${w.r};background:${tint(w, 16)}"></div>`;
     let prev = '';
     if (k) { prev = `<div class="g-prev c${k}">` + Array.from({ length: k }, (_, j) => hasImg(w) && w.images[j + 1] ? `<img src="${w.images[j + 1]}" alt="" loading="lazy">` : `<span style="background:${tint(w, 22 + j * 8)}"></span>`).join('') + '</div>'; }
     const play = (w.kind === 'motion' || w.video) ? '<i class="g-play"></i>' : '';
