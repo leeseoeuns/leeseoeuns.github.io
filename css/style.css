@@ -385,7 +385,7 @@ img{display:block;max-width:100%}
 .g-item.in{opacity:1;transform:none}
 .g-item>img,.g-item>.ph{display:block;width:100%;transition:transform 1s var(--ease),filter .6s}
 .g-item:hover>img,.g-item:hover>.ph{transform:scale(1.03)}
-.g-prev{position:absolute;inset:0;display:grid;gap:3px;opacity:0;transition:opacity .45s var(--ease) .05s}
+.g-prev{position:absolute;inset:0;display:grid;gap:0;opacity:0;transition:opacity .45s var(--ease) .05s}
 .g-prev.c2{grid-template-columns:1fr 1fr}
 .g-prev.c3{grid-template-columns:1fr 1fr 1fr}
 .g-prev.q4{grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr}

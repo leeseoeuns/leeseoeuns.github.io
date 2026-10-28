@@ -46,7 +46,7 @@ window.IMG_R = {"assets/others/graphic/01.jpg": 1.4111, "assets/others/graphic/b
     const yt = w.video && ytId(w.video);
     const main = !hasImg(w) && w.poster ? `<img src="${w.poster}" alt="" loading="lazy" style="aspect-ratio:1/${w.r};object-fit:cover">` : !hasImg(w) && yt ? `<img src="https://i.ytimg.com/vi/${yt}/hqdefault.jpg" alt="" loading="lazy" onerror="this.style.background='${tint(w, 16)}';this.removeAttribute('src')" style="aspect-ratio:1/${w.r};object-fit:cover">` : hasImg(w) ? `<img src="${w.images[0]}" alt="${w.info ? w.info[0] : ''}" loading="lazy">` : `<div class="ph" style="aspect-ratio:1/${w.r};background:${tint(w, 16)}"></div>`;
     const prev = L ? `<div class="g-prev ${L.name}">` + L.imgs.map(src => `<img src="${src}" alt="" loading="lazy">`).join('') + '</div>' : '';
-    const play = (w.kind === 'motion' || w.video) ? '<i class="g-play"></i>' : '';
+    const play = (w.kind === 'motion' || (w.video && !hasImg(w))) ? '<i class="g-play"></i>' : '';
     const info = w.info ? `<span class="g-info" tabindex="0" aria-label="${w.info[0]}">${SHAPE_SVG(KIND[w.kind][0], KIND[w.kind][1])}<span class="g-tip"><b>${w.info[0]}</b>${w.info[1] || ''}</span></span>` : '';
     // closed state: a colour block with the category shape covers the work, like a drawer front
     const cover = `<div class="g-cover" style="background:${tint(w, 18)}"><span class="g-shape">${SHAPE_SVG(KIND[w.kind][0], KIND[w.kind][1])}</span></div>`;
