@@ -591,3 +591,14 @@ img{display:block;max-width:100%}
 .wardrobe .door.r .knob{left:0;border-radius:0 3px 3px 0;clip-path:polygon(0 0,100% 0,100% 50%,100% 100%,0 100%)}
 .wardrobe:is(:hover,:focus-visible,.open) .door.l .knob{right:0}
 .wardrobe:is(:hover,:focus-visible,.open) .door.r .knob{left:0}
+/* drawers 01–05: the preview grows to meet the pulled-down front (no gap) */
+.drawer .cover{left:5%;width:90%;top:20.5%}
+/* wardrobe v4: the doors slide apart sideways (no swing), leaving a strip of each door visible */
+.wardrobe:is(:hover,:focus-visible,.open) .door.l{transform:translateX(-70%)!important}
+.wardrobe:is(:hover,:focus-visible,.open) .door.r{transform:translateX(70%)!important}
+.wardrobe:is(:hover,:focus-visible,.open) .door.l,.wardrobe:is(:hover,:focus-visible,.open) .door.r{box-shadow:inset 0 0 0 1px rgba(17,17,17,.1),0 6px 14px rgba(0,0,0,.1)!important}
+.wardrobe .door{z-index:2}
+.drawer.wardrobe{overflow:hidden}
+.drawer.wardrobe .inside{padding:12% 17% 9%}
+.wardrobe .door.l{z-index:3}
+@media (max-width:900px){.drawer.wardrobe .inside{padding:9% 16% 7%}}
