@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Read the Room — Lee Seoeun</title>
+<meta name="description" content="UX/UI designer Lee Seoeun's portfolio — an exhibition of four rooms you can read, listen to, and watch.">
+<meta property="og:title" content="Read the Room — Lee Seoeun">
+<meta property="og:description" content="이서은 UX/UI 포트폴리오 — 보고, 읽고, 시청하는 네 개의 방">
+<meta property="og:image" content="assets/works/01/01.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Noto+Sans+KR:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='44' fill='%23504AFA'/%3E%3C/svg%3E">
+</head>
+<body>
+<nav class="nav" id="nav">
+  <a class="brand link" href="#top" data-text="Lee Seoeun"><span>Lee Seoeun</span></a>
+  <ul>
+    <li><a class="link" href="#archive" data-text="Archive"><span>Archive</span></a></li>
+    <li><a class="link" href="#statement" data-text="Statement"><span>Statement</span></a></li>
+    <li><a class="link" href="#contact" data-text="Contact"><span>Contact</span></a></li>
+  </ul>
+</nav>
+
+<div class="loader" id="loader" aria-hidden="true"><span class="say" id="say">Reading the room…</span><span class="count" id="count">000</span></div>
+
+<header class="hero" id="top">
+  <div class="field" id="field"></div>
+  <div class="hero-copy">
+    <p class="eyebrow reveal">An exhibition of works by Lee Seoeun · UX/UI Designer</p>
+    <h1 class="title"><span class="w"><i>Read</i></span><br><span class="w"><i style="transition-delay:.08s">the Room</i></span></h1>
+    <p class="intro reveal d1">사람이 놓인 맥락을 먼저 읽고, 그 맥락에 맞는 구조로 답합니다.<br>네 개의 서랍에서 네 개의 프로젝트를 보고, 읽고, 시청해 보세요.</p>
+    <a class="pill reveal d2" href="#archive" id="enter">Enter the exhibition <i class="dot"></i></a>
+  </div>
+  <p class="hint reveal d3">Drag & throw the shapes<br><span class="kr">도형을 잡아 던져보세요</span></p>
+</header>
+
+<section class="strip">
+  <div><span>Now showing</span><b>4 Rooms · 59 Works</b></div>
+  <div><span>Book · Docent · Screening</span><b class="kr">스크롤로 보기 · 읽어주기 · 시청하기</b></div>
+  <div class="r"><span>Season</span><b>2026</b></div>
+</section>
+
+<section class="section" id="archive">
+  <div class="sec-head">
+    <h2>Archive</h2>
+    <p>서랍을 골라 열어보세요. 마우스를 대면 살짝 열립니다.</p>
+  </div>
+  <div class="cabinet" id="cabinet"></div>
+</section>
+
+<section class="section statement" id="statement">
+  <h2>Statement</h2>
+  <div>
+    <p class="body">화면을 그리기 전에, 그 화면 앞에 선 사람이 무엇을 하러 왔는지부터 읽습니다. 조직도 대신 방문 목적으로, 기능 목록 대신 하루의 흐름으로 구조를 다시 세우는 일을 좋아합니다.</p>
+    <div class="modes">
+      <div class="mode-card"><div class="sh" data-shape="square"></div><b>Book · 보기</b><p>만화를 읽듯 위에서 아래로, 페이지를 끊김 없이 스크롤합니다.</p></div>
+      <div class="mode-card"><div class="sh" data-shape="circle"></div><b>Docent · 읽어주기</b><p>한 장씩 조명 아래에 두고, 왜 그렇게 만들었는지 설명을 곁들입니다.</p></div>
+      <div class="mode-card"><div class="sh" data-shape="triangle"></div><b>Screening · 시청</b><p>자리에 앉아 보듯, 자막과 함께 자동으로 넘어갑니다.</p></div>
+    </div>
+  </div>
+</section>
+
+<footer class="foot" id="contact">
+  <a class="link" href="https://github.com/leeseoeuns" target="_blank" rel="noopener" data-text="github.com/leeseoeuns ↗"><span>github.com/leeseoeuns ↗</span></a>
+  <span>© 2026 Lee Seoeun</span>
+</footer>
+
+<script src="js/common.js"></script>
+<script src="js/shapes.js"></script>
+<script src="js/data.js"></script>
+<script src="js/lobby.js"></script>
+</body>
+</html>

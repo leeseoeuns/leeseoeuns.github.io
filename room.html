@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="ko" class="room">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Room — Lee Seoeun</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Noto+Sans+KR:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='44' fill='%23504AFA'/%3E%3C/svg%3E">
+</head>
+<body>
+<div class="progress"><i id="bar"></i></div>
+
+<aside class="side">
+  <a class="back link" href="index.html#archive" data-go data-text="← Archive"><span>← Archive</span></a>
+  <div>
+    <p class="room-no" id="roomNo"></p>
+    <h1 id="roomEn"></h1>
+    <p class="ko" id="roomKo"></p>
+  </div>
+  <p class="meta" id="roomMeta"></p>
+  <ol class="chapters" id="chapters"></ol>
+  <div class="modebar">
+    <button class="pill is-on" data-mode="book">Book<span class="k"> · 보기</span></button>
+    <button class="pill" data-mode="docent">Docent<span class="k"> · 읽어주기</span> <i class="dot"></i></button>
+    <button class="pill" data-mode="screening">Screening<span class="k"> · 시청</span> <i class="dot"></i></button>
+  </div>
+</aside>
+
+<main class="read">
+  <div class="book" id="book"></div>
+  <div class="end">
+    <small id="endTxt"></small>
+    <a class="next-room" id="nextRoom" data-go></a>
+  </div>
+</main>
+
+<!-- Docent: one page under the light, with a guide's voice -->
+<section class="overlay docent" id="docent" aria-label="Docent mode">
+  <div class="ov-top"><span class="ttl" id="dTitle"></span><button class="pill" data-close>Close · 닫기</button></div>
+  <div class="stage"><img id="dImg" alt=""></div>
+  <div class="panel">
+    <span class="cnt" id="dCnt"></span>
+    <h3 id="dHead"></h3>
+    <p id="dBody"></p>
+  </div>
+  <div class="ctrl"><button class="prev" id="dPrev">← Prev</button><div class="track"><i id="dTrack"></i></div><button class="nextb" id="dNext">Next →</button></div>
+</section>
+
+<!-- Screening: sit back, it plays -->
+<section class="overlay screening" id="screening" aria-label="Screening mode">
+  <div class="ov-top"><span class="ttl" id="sTitle"></span><button class="pill" data-close>Close · 닫기</button></div>
+  <div class="screen" id="screen"></div>
+  <p class="sub" id="sub"><span></span></p>
+  <div class="segs" id="segs"></div>
+  <div class="scr-info"><span id="sNow"></span><button id="sPlay">❚❚ Pause</button></div>
+  <div class="fin" id="fin"><h4>Fin.</h4><a class="pill" id="finNext" data-go style="border-color:#fff;color:#fff"></a><button class="pill" id="finAgain" style="border-color:rgba(255,255,255,.5);color:#fff">Replay · 다시 보기</button></div>
+</section>
+
+<script src="js/common.js"></script>
+<script src="js/shapes.js"></script>
+<script src="js/data.js"></script>
+<script src="js/room.js"></script>
+</body>
+</html>
