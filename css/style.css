@@ -215,9 +215,8 @@ img{display:block;max-width:100%}
 .end small{display:block;color:var(--mute);font-size:13px;margin-bottom:20px}
 .end{width:min(960px,calc(100vw - var(--side) - 80px));margin:0 auto}
 .next-room{display:inline-flex;flex-direction:column;align-items:center;gap:12px}
-.next-room .tile{width:120px;height:120px;display:grid;place-items:center;background:var(--paper-2);border:1px solid var(--line);border-radius:2px;transition:transform .3s var(--spring),border-color .3s}
-.next-room .tile svg{width:44px;height:44px;transition:transform .8s var(--spring)}
-.next-room:hover .tile{border-color:var(--ink)}
+.next-room .tile{width:88px;height:88px;display:grid;place-items:center;transition:transform .3s var(--spring)}
+.next-room .tile svg{width:56px;height:56px;transition:transform .8s var(--spring)}
 .next-room:hover .tile svg{transform:rotate(360deg) scale(1.12)}
 .next-room:active .tile{transform:scale(.95)}
 .next-room .lbl{font-size:13px;color:var(--mute);transition:color .3s}
