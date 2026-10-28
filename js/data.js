@@ -2,6 +2,7 @@
 window.ROOMS = [
  {
   "no": "01",
+  "shape": "square",
   "en": "BC World Pharm",
   "ko": "비씨월드제약 국·영문 홈페이지 리뉴얼",
   "type": "Team project · 2026",
@@ -169,6 +170,7 @@ window.ROOMS = [
  },
  {
   "no": "02",
+  "shape": "circle",
   "en": "University Library",
   "ko": "건국대학교 도서관 열람실 리뉴얼",
   "type": "Team project · 2025",
@@ -345,6 +347,7 @@ window.ROOMS = [
  },
  {
   "no": "03",
+  "shape": "triangle",
   "en": "Byeoliran",
   "ko": "안심 귀가 앱 「별이랑」",
   "type": "Mobile app · 2026",
@@ -476,6 +479,7 @@ window.ROOMS = [
  },
  {
   "no": "04",
+  "shape": "pentagon",
   "en": "Maleficent",
   "ko": "영화 「말레피센트」 웹사이트",
   "type": "Personal project · 2025",

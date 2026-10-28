@@ -25,10 +25,12 @@
   // 2 · cabinet: 6 × 4 drawers, four of them hold work
   const cab = document.getElementById('cabinet');
   const live = { 0: 0, 1: 1, 2: 2, 3: 3 };
+  const EMPTY = ['circle', 'triangle', 'square', 'hexagon', 'pentagon', 'diamond', 'triangle'];
   for (let i = 0; i < 24; i++) {
     const r = ROOMS[live[i]];
     const d = document.createElement(r ? 'a' : 'div');
     d.className = 'drawer ' + (r ? 'live' : 'empty'); d.style.setProperty('--i', i);
+    d.dataset.s = r ? r.shape : EMPTY[i % EMPTY.length]; if (!r) d.style.setProperty('--rot', (i % 3 - 1) * 15 + 'deg');
     if (r) {
       d.href = 'room.html?r=' + r.no; d.setAttribute('aria-label', `Room ${r.no} — ${r.en}, ${r.ko}`);
       d.innerHTML = `<div class="cavity"></div><img class="cover" src="${r.pages[0].src}" alt="" loading="lazy">

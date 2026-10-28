@@ -70,7 +70,8 @@
           vx: (Math.random() - .5) * 40, vy: (Math.random() - .5) * 40,
           a: Math.random() * 360, av: (Math.random() - .5) * 22,
           ph: Math.random() * 1000, f: .25 + Math.random() * .5, m: (sz * sz) / 6000,
-          s: 0, st: 1 // spawn scale anim
+          s: 0, st: 1, // spawn scale anim
+          v0: 34 + Math.random() * 34, w0: (Math.random() < .5 ? -1 : 1) * (5 + Math.random() * 16), ht: 9 // cruising speed, spin, time since last bounce
         };
         b.delay = i * 55; this.bodies.push(b);
         d.addEventListener('pointerdown', e => this.down(e, b));
@@ -92,6 +93,7 @@
       if (h.length > 1) { const a = h[0], z = h[h.length - 1], dt = Math.max(16, z[2] - a[2]) / 1000; g.b.vx = (z[0] - a[0]) / dt * .6; g.b.vy = (z[1] - a[1]) / dt * .6; g.b.av += (g.b.vx) * .05; }
       g.b.el.classList.remove('held'); this.grab = null;
     }
+    boing(b) { if (b.ht > .25) b.ht = 0; }
     // gather all shapes into a neat grid (loading → lobby moment)
     gather(cols = 6, gap = 18) {
       this.gathered = true; const n = this.bodies.length, rows = Math.ceil(n / cols), cell = Math.min(90, (this.w * .6) / cols);
@@ -117,9 +119,12 @@
             const dx = b.x - M.x, dy = b.y - M.y, d = Math.hypot(dx, dy);
             if (d < R + b.r && d > .1) { const f = (1 - d / (R + b.r)) * 900 / Math.sqrt(b.m + .4); b.vx += dx / d * f * dt; b.vy += dy / d * f * dt; b.av += (dx > 0 ? 1 : -1) * f * .02 * dt; }
           }
-          // gentle speed limit + near-zero friction (space)
-          const sp = Math.hypot(b.vx, b.vy), max = 140; if (sp > max) { b.vx *= .97; b.vy *= .97; }
-          b.vx *= .996; b.vy *= .996; b.av *= .995; b.av = Math.max(-90, Math.min(90, b.av));
+          // zero gravity: never stops — speed always eases back to its own cruising speed
+          let sp = Math.hypot(b.vx, b.vy);
+          if (sp < 1) { const ang = Math.random() * Math.PI * 2; b.vx = Math.cos(ang); b.vy = Math.sin(ang); sp = 1; }
+          const g = 1 + (b.v0 / sp - 1) * Math.min(1, (sp > b.v0 ? .9 : 1.6) * dt);
+          b.vx *= g; b.vy *= g;
+          b.av += (b.w0 - b.av) * Math.min(1, .6 * dt); b.av = Math.max(-140, Math.min(140, b.av));
         }
         // keep clear of text blocks: a soft force field around each obstacle rect
         if (!this.gathered && this.obs) for (const o of this.obs) {
@@ -132,18 +137,23 @@
         b.x += b.vx * dt; b.y += b.vy * dt; b.a += b.av * dt;
         // soft walls
         const m = b.r;
-        if (b.x < m) { b.x = m; b.vx = Math.abs(b.vx) * .85; } if (b.x > W - m) { b.x = W - m; b.vx = -Math.abs(b.vx) * .85; }
-        if (b.y < m) { b.y = m; b.vy = Math.abs(b.vy) * .85; } if (b.y > H - m) { b.y = H - m; b.vy = -Math.abs(b.vy) * .85; }
+        b.ht += dt;
+        if (b.x < m) { b.x = m; if (b.vx < 0) { b.vx = -b.vx; this.boing(b); } } if (b.x > W - m) { b.x = W - m; if (b.vx > 0) { b.vx = -b.vx; this.boing(b); } }
+        if (b.y < m) { b.y = m; if (b.vy < 0) { b.vy = -b.vy; this.boing(b); } } if (b.y > H - m) { b.y = H - m; if (b.vy > 0) { b.vy = -b.vy; this.boing(b); } }
       }
       if (!this.gathered) for (let i = 0; i < B.length; i++) for (let j = i + 1; j < B.length; j++) {
         const a = B[i], c = B[j], dx = c.x - a.x, dy = c.y - a.y, d = Math.hypot(dx, dy), min = a.r + c.r;
         if (d < min && d > .01) {
           const nx = dx / d, ny = dy / d, o = (min - d) / 2; a.x -= nx * o; a.y -= ny * o; c.x += nx * o; c.y += ny * o;
           const rv = (c.vx - a.vx) * nx + (c.vy - a.vy) * ny;
-          if (rv < 0) { const imp = -(1.85) * rv / (1 / a.m + 1 / c.m); a.vx -= imp * nx / a.m; a.vy -= imp * ny / a.m; c.vx += imp * nx / c.m; c.vy += imp * ny / c.m; const tang = (c.vx - a.vx) * -ny + (c.vy - a.vy) * nx; a.av -= tang * .15; c.av += tang * .15; }
+          if (rv < 0) { const imp = -2 * rv / (1 / a.m + 1 / c.m); a.vx -= imp * nx / a.m; a.vy -= imp * ny / a.m; c.vx += imp * nx / c.m; c.vy += imp * ny / c.m; const tang = (c.vx - a.vx) * -ny + (c.vy - a.vy) * nx; a.av -= tang * .15; c.av += tang * .15; this.boing(a); this.boing(c); }
         }
       }
-      for (const b of B) b.el.style.transform = `translate3d(${(b.x - b.sz / 2).toFixed(1)}px,${(b.y - b.sz / 2).toFixed(1)}px,0) rotate(${b.a.toFixed(1)}deg) scale(${b.s.toFixed(3)})`;
+      for (const b of B) {
+        // 토옹: a soft jelly wobble right after each bounce
+        const k = Math.exp(-b.ht * 6) * Math.cos(b.ht * 20), sc = b.s * (1 - .13 * k);
+        b.el.style.transform = `translate3d(${(b.x - b.sz / 2).toFixed(1)}px,${(b.y - b.sz / 2).toFixed(1)}px,0) rotate(${b.a.toFixed(1)}deg) scale(${sc.toFixed(3)})`;
+      }
       requestAnimationFrame(this.loop);
     }
   }

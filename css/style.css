@@ -96,12 +96,24 @@ img{display:block;max-width:100%}
   transform:translateY(80%) rotate(0deg) scale(.9);opacity:0;transition:transform .7s var(--spring) .06s,opacity .35s .06s}
 .drawer .front{position:absolute;inset:3%;background:var(--paper);border:1px solid rgba(17,17,17,.1);border-radius:2px;transform-origin:50% 100%;
   transition:transform .7s var(--spring) .06s,box-shadow .5s;display:flex;flex-direction:column;justify-content:space-between;padding:10px 12px}
-.drawer .handle{position:absolute;left:50%;top:50%;width:22%;height:5px;margin-left:-11%;border-radius:3px;background:var(--h,rgba(17,17,17,.25));transition:top .7s var(--spring) .06s}
-.drawer .no{font-size:12px;font-weight:600;display:flex;gap:8px;align-items:baseline}
+/* handle: a bar that becomes a regular shape (diameter = bar length) on hover */
+.drawer .front{container-type:inline-size}
+.drawer .handle{position:absolute;left:calc(50% - 11cqw);top:calc(50% - 2.5px);width:22cqw;height:5px;border-radius:3px;background:var(--h,rgba(17,17,17,.25));
+  clip-path:var(--c0);transition:top .7s var(--spring) .06s,left .7s var(--spring) .06s,height .55s var(--spring) .1s,border-radius .5s var(--ease) .1s,clip-path .55s var(--spring) .1s,transform .7s var(--spring) .1s}
+.drawer[data-s=square]  .handle{--c0:polygon(0 0,100% 0,100% 100%,0 100%);--c1:var(--c0);--hh:22cqw;--hr:0}
+.drawer[data-s=circle]  .handle{--c0:none;--c1:none;--hh:22cqw;--hr:50%}
+.drawer[data-s=triangle] .handle{--c0:polygon(0 0,100% 0,100% 100%,0 100%);--c1:polygon(50% 0,50% 0,100% 100%,0 100%);--hh:19.05cqw;--hr:0}
+.drawer[data-s=pentagon] .handle{--c0:polygon(0 0,50% 0,100% 0,100% 100%,0 100%);--c1:polygon(0 38.2%,50% 0,100% 38.2%,80.9% 100%,19.1% 100%);--hh:20.92cqw;--hr:0}
+.drawer[data-s=hexagon] .handle{--c0:polygon(0 0,0 0,100% 0,100% 0,100% 100%,0 100%);--c1:polygon(0 50%,25% 0,75% 0,100% 50%,75% 100%,25% 100%);--hh:19.05cqw;--hr:0}
+.drawer[data-s=diamond] .handle{--c0:polygon(0 0,100% 0,100% 100%,0 100%);--c1:polygon(50% 0,100% 50%,50% 100%,0 50%);--hh:22cqw;--hr:0}
+.drawer:hover .handle,.drawer:focus-visible .handle,.drawer.open .handle{height:var(--hh);border-radius:var(--hr);clip-path:var(--c1)}
+.drawer.empty:hover .handle{top:calc(50% - var(--hh) / 2);transform:rotate(var(--rot,0deg))}
+.drawer .no{max-width:calc(100% - 22cqw - 14px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.drawer .no{font-size:12px;font-weight:600;display:flex;gap:8px;align-items:baseline;position:relative;z-index:1}
 .drawer .no em{font-style:normal;font-weight:400;opacity:0;transform:translateX(-6px);transition:opacity .4s .12s,transform .5s var(--ease) .12s}
 .drawer .t{font-size:12px;color:var(--mute);transition:opacity .3s}
 .drawer.live:hover .front,.drawer.live:focus-visible .front,.drawer.live.open .front{transform:translateY(68%) ;box-shadow:0 -8px 18px rgba(0,0,0,.18)}
-.drawer.live:hover .handle,.drawer.live:focus-visible .handle,.drawer.live.open .handle{top:14px}
+.drawer.live:hover .handle,.drawer.live:focus-visible .handle,.drawer.live.open .handle{top:10px;left:calc(100% - 22cqw - 10px)}
 .drawer.live:hover .cover,.drawer.live:focus-visible .cover,.drawer.live.open .cover{transform:translateY(-6%) rotate(4deg) scale(1);opacity:1}
 .drawer.live:hover .no em,.drawer.live:focus-visible .no em,.drawer.live.open .no em{opacity:1;transform:none}
 .drawer.live:hover .t,.drawer.live:focus-visible .t,.drawer.live.open .t{opacity:0}

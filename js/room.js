@@ -22,7 +22,7 @@
   const btns = [...chapters.querySelectorAll('button')];
   $('endTxt').textContent = `— End of Room ${R.no} —`;
   const nx = $('nextRoom'); nx.href = 'room.html?r=' + next.no; nx.dataset.color = next.dark ? '#1C1428' : next.paper;
-  nx.innerHTML = `<span class="box"><span class="drawer live open" style="pointer-events:none"><span class="cavity"></span><img class="cover" src="${next.pages[0].src}" alt=""><span class="front" style="--h:${next.accent}"><span class="handle"></span><span class="no">${next.no}<em>${next.en}</em></span></span></span></span><span>Next drawer → ${next.en}</span>`;
+  nx.innerHTML = `<span class="box"><span class="drawer live open" data-s="${next.shape}" style="pointer-events:none"><span class="cavity"></span><img class="cover" src="${next.pages[0].src}" alt=""><span class="front" style="--h:${next.accent}"><span class="handle"></span><span class="no">${next.no}<em>${next.en}</em></span></span></span></span><span>Next drawer → ${next.en}</span>`;
 
   const seen = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('seen'); seen.unobserve(e.target); } }), { rootMargin: '0px 0px -8% 0px' });
   book.querySelectorAll('.page').forEach(p => seen.observe(p));
