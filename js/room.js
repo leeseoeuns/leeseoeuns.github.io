@@ -22,7 +22,7 @@
   const btns = [...chapters.querySelectorAll('button')];
   $('endTxt').textContent = `— End of Room ${R.no} —`;
   const nx = $('nextRoom'); nx.href = 'room.html?r=' + next.no; nx.dataset.color = next.dark ? '#1C1428' : next.paper;
-  nx.innerHTML = `<span class="box"><span class="drawer live open quick" data-s="${next.shape}" style="pointer-events:none"><span class="cavity"></span><img class="cover" src="${next.pages[0].src}" alt=""><span class="front" style="--h:${next.accent}"><span class="handle"></span><span class="no">${next.no}<em>${next.en}</em></span></span></span></span><span>Next drawer → ${next.en}</span>`;
+  nx.innerHTML = `<span class="tile">${SHAPE_SVG(next.shape, next.accent)}</span><span class="lbl">Next → ${next.en}</span>`; nx.setAttribute('aria-label', 'Next room: ' + next.en);
 
   const seen = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('seen'); seen.unobserve(e.target); } }), { rootMargin: '0px 0px -8% 0px' });
   book.querySelectorAll('.page').forEach(p => seen.observe(p));
@@ -53,6 +53,7 @@
     $('docent').classList.toggle('show', m === 'docent'); $('screening').classList.toggle('show', m === 'screening');
     document.body.style.overflow = m === 'book' ? '' : 'hidden';
     if (m === 'docent') docent(Math.max(0, cur));
+    if (m !== 'docent') hush();
     if (m === 'screening') screening(Math.max(0, cur)); else stopScreen();
   }
 
@@ -60,6 +61,22 @@
   const dImg = $('dImg'), dHead = $('dHead'), dBody = $('dBody'); let di = 0, typer;
   $('dTitle').textContent = `Room ${R.no} · ${R.en}`;
   function words(p, i) { const d = R.docent[String(i + 1)]; return d ? { h: d[0], b: d[1] } : { h: p.t === 'Cover' ? `${R.en}\n${R.ko}` : p.t, b: '' }; }
+  // read aloud (Web Speech API, Korean voice when the device has one)
+  const synth = window.speechSynthesis; let voiceOn = !!synth, koVoice = null;
+  const pickVoice = () => { if (!synth) return; const vs = synth.getVoices(); koVoice = vs.find(v => /ko(-|_)KR/i.test(v.lang) && /google|yuna|sora|heami|neural/i.test(v.name)) || vs.find(v => /^ko/i.test(v.lang)) || null; };
+  if (synth) { pickVoice(); synth.onvoiceschanged = pickVoice; }
+  const vBtn = $('voice');
+  function paintVoice() { vBtn.classList.toggle('off', !voiceOn); vBtn.querySelector('.vt').textContent = voiceOn ? '목소리 켜짐' : '목소리 꺼짐'; }
+  if (!synth) vBtn.style.display = 'none'; else paintVoice();
+  vBtn.onclick = () => { voiceOn = !voiceOn; paintVoice(); if (voiceOn) speak(words(P[di], di)); else synth.cancel(); };
+  function speak(w) {
+    if (!synth || !voiceOn) return; synth.cancel();
+    const u = new SpeechSynthesisUtterance((w.h.replace(/\n/g, ' ') + '. ' + (w.b || '')).trim());
+    u.lang = 'ko-KR'; if (koVoice) u.voice = koVoice; u.rate = .95; u.pitch = 1; synth.speak(u);
+  }
+  function hush() { if (synth) synth.cancel(); }
+  addEventListener('pagehide', hush);
+
   function docent(i) {
     di = (i + N) % N; const p = P[di], w = words(p, di);
     $('dCnt').textContent = `Docent · ${pad(di + 1)} / ${pad(N)}`; $('dTrack').style.width = ((di + 1) / N) * 100 + '%';
@@ -71,6 +88,7 @@
     clearInterval(typer); dBody.classList.remove('on'); dBody.textContent = w.b;
     dHead.innerHTML = [...w.h].map(c => c === '\n' ? '<br>' : `<span class="ch">${c}</span>`).join('');
     const chs = dHead.querySelectorAll('.ch'); let k = 0;
+    speak(w);
     typer = setInterval(() => { if (k < chs.length) chs[k++].classList.add('on'); else { clearInterval(typer); dBody.classList.add('on'); } }, 38);
   }
   $('dNext').onclick = () => docent(di + 1); $('dPrev').onclick = () => docent(di - 1);
@@ -86,7 +104,7 @@
     if (si >= N) { $('fin').classList.add('show'); return; }
     const p = P[si], w = words(p, si);
     const old = screen.querySelector('img.on'); if (old) { old.classList.remove('on'); setTimeout(() => old.remove(), 1200); }
-    const im = new Image(); im.src = p.src; im.alt = p.t; im.style.setProperty('--dur', (DUR + 1200) + 'ms'); screen.appendChild(im);
+    const im = new Image(); im.src = p.src; im.alt = p.t; screen.appendChild(im);
     requestAnimationFrame(() => im.classList.add('on'));
     sub.firstElementChild.classList.remove('on');
     setTimeout(() => { sub.firstElementChild.textContent = w.b || w.h.replace('\n', ' '); sub.firstElementChild.classList.add('on'); }, 450);
