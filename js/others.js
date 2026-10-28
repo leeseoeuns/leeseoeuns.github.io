@@ -16,7 +16,7 @@ window.OTHERS = [
   { kind: 'surface', s: 'tall', info: ['넥타이 · Blue', 'Surface Design · 넥타이 디자인 · 착용 촬영'], images: ['assets/others/tie/b05.jpg','assets/others/tie/b01.jpg','assets/others/tie/b02.jpg','assets/others/tie/b03.jpg','assets/others/tie/b04.jpg','assets/others/tie/b06.jpg','assets/others/tie/b07.jpg'], r: 1.333 },
   { kind: 'textile', s: 'big', info: ['위빙', 'Textile · 손으로 엮은 작품 · 행성을 소재로'], images: ['assets/others/textile/h01.jpg','assets/others/textile/h04.jpg','assets/others/textile/h07.jpg','assets/others/textile/h02.jpg','assets/others/textile/h05.jpg','assets/others/textile/h08.jpg','assets/others/textile/h03.jpg','assets/others/textile/h06.jpg','assets/others/textile/h09.jpg'], r: 1.414 },
   { kind: 'textile', s: 'tall', info: ['초 · 피터사이트 · 호피석', 'Textile · Weaving'], images: ['assets/others/textile/w01.jpg','assets/others/textile/w02.jpg','assets/others/textile/w03.jpg','assets/others/textile/w04.jpg','assets/others/textile/w05.jpg','assets/others/textile/w06.jpg'], r: 1.333 },
-  { kind: 'motion', s: 'wide', info: ['Motion Graphic', 'Motion Graphic'], images: [], poster: 'assets/others/motion/mid.jpg', video: 'assets/others/motion/mid.mp4', r: .5625 }
+  { kind: 'motion', s: 'wide', info: ['동물 친구들', 'Motion Graphic'], images: [], poster: 'assets/others/motion/mid.jpg', video: 'assets/others/motion/mid.mp4', r: .5625 }
 ];
 
 // image height/width ratios (generated) — used to pick a preview grid that doesn't crop badly

@@ -16,7 +16,7 @@
   const book = $('book'), chapters = $('chapters');
   P.forEach((p, i) => {
     const f = document.createElement('figure'); f.className = 'page'; f.id = 'p' + (i + 1); f.style.aspectRatio = `1 / ${p.r}`;
-    const im = new Image(); im.src = p.src + '?v=3'; im.alt = `${R.en} — ${p.t}`; im.loading = i < 2 ? 'eager' : 'lazy'; im.decoding = 'async';
+    const im = new Image(); im.src = p.src + '?v=4'; im.alt = `${R.en} — ${p.t}`; im.loading = i < 2 ? 'eager' : 'lazy'; im.decoding = 'async';
     im.width = 1440; im.height = Math.round(1440 * p.r); f.appendChild(im); book.appendChild(f);
   });
   // chapters grouped into parts; only the part being read unfolds
@@ -96,7 +96,7 @@
     $('dCnt').textContent = `Docent · ${pad(di + 1)} / ${pad(N)}`; $('dTrack').style.width = ((di + 1) / N) * 100 + '%';
     dImg.classList.add('leave');
     setTimeout(() => {
-      dImg.src = p.src; dImg.classList.remove('leave'); dImg.classList.add('enter'); void dImg.offsetWidth; dImg.classList.remove('enter');
+      dImg.src = p.src + '?v=4'; dImg.classList.remove('leave'); dImg.classList.add('enter'); void dImg.offsetWidth; dImg.classList.remove('enter');
       document.getElementById('docent').style.setProperty('--sx', (30 + Math.random() * 16) + '%');
     }, 280);
     clearInterval(typer); dBody.classList.remove('on'); dBody.textContent = w.b;
@@ -118,7 +118,7 @@
     if (si >= N) { $('fin').classList.add('show'); return; }
     const p = P[si], w = words(p, si);
     const old = screen.querySelector('img.on'); if (old) { old.classList.remove('on'); setTimeout(() => old.remove(), 1200); }
-    const im = new Image(); im.src = p.src + '?v=3'; im.alt = p.t; screen.appendChild(im);
+    const im = new Image(); im.src = p.src + '?v=4'; im.alt = p.t; screen.appendChild(im);
     requestAnimationFrame(() => im.classList.add('on'));
     sub.firstElementChild.classList.remove('on');
     setTimeout(() => { sub.firstElementChild.textContent = w.b || w.h.replace('\n', ' '); sub.firstElementChild.classList.add('on'); }, 450);
