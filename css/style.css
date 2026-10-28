@@ -456,3 +456,22 @@ img{display:block;max-width:100%}
 .g-prev{transition:opacity .6s var(--ease) 0s}
 .g-item:hover .g-prev{transition:opacity .7s var(--ease) 1.1s}
 .g-item:hover>img{transition-delay:.75s}
+/* Others v3 — mixed tile sizes on a tidy 4-col grid; preview grid sits under the cover (no single-image flash), softly blurred */
+.gallery{--col:calc((100vw - 2*var(--gutter) - 48px)/4);grid-auto-rows:calc(var(--col)*1.1);grid-auto-flow:row dense}
+.g-item{aspect-ratio:auto}
+.g-item.s-big{grid-column:span 2;grid-row:span 2}.g-item.s-tall{grid-row:span 2}.g-item.s-wide{grid-column:span 2}
+.g-prev.n9{grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr)}
+.g-prev.q6{grid-template-columns:repeat(3,1fr);grid-template-rows:1fr 1fr}
+.g-prev.c4{grid-template-columns:repeat(4,1fr)}
+.g-prev.r3{grid-template-rows:repeat(3,1fr)}
+.g-prev.l3{grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr}.g-prev.l3>:first-child{grid-row:span 2}
+.g-prev>span{display:block;overflow:hidden;min-height:0;transform:none!important}
+.g-prev>span>img{display:block;width:100%;height:100%;object-fit:cover;transform:scale(1.08);filter:blur(2.5px);transition:transform 1s var(--ease)}
+.g-item:hover .g-prev>span>img{transform:scale(1.04)}
+.g-item.has-prev>img{opacity:0}
+.g-item.has-prev .g-prev,.g-item.has-prev:hover .g-prev{opacity:1;transition:none}
+.g-item>img,.g-item>.ph{filter:blur(2.5px)}
+.g-vid{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;filter:blur(2px);transform:scale(1.04);transition:opacity .6s var(--ease)}
+.g-item.playing .g-vid{opacity:1}
+@media (max-width:900px){.gallery{--col:calc((100vw - 2*var(--gutter) - 10px)/2)}}
+@media (hover:none){.g-item.has-prev>img{opacity:1}.g-prev,.g-item.has-prev .g-prev{display:none}.g-item>img,.g-item>.ph{filter:none}}

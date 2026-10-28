@@ -2,20 +2,21 @@
    info: [title, line]  → shows the little shape + hover note. Leave info null to hide the shape.
    kind: package | surface | graphic | motion | textile   (decides the shape + colour)
    video: mp4 path or YouTube/Vimeo URL for motion work.
-   r: placeholder ratio (height / width) used until real images are added. */
+   r: placeholder ratio (height / width) used until real images are added.
+   s: tile size — big (2×2) · tall (1×2) · wide (2×1) · none (1×1). Order is set so the grid has no holes at 4 and 2 columns. */
 window.OTHERS = [
-  { kind: 'package', info: ['바스리후레 패키지 리디자인', 'Package Design · 2026'], images: ['assets/others/pkg/01.jpg','assets/others/pkg/03.jpg','assets/others/pkg/04.jpg','assets/others/pkg/05.jpg','assets/others/pkg/08.jpg','assets/others/pkg/09.jpg','assets/others/pkg/10.jpg','assets/others/pkg/02.jpg','assets/others/pkg/06.jpg','assets/others/pkg/07.jpg'], r: 1.333 },
-  { kind: 'surface', info: ['트윌리 · 스퀘어 스카프', 'Surface Design · 실물 제작 · 착용 촬영'], images: ['assets/others/scarf/b02.jpg','assets/others/scarf/a02.jpg','assets/others/scarf/a01.jpg','assets/others/scarf/a03.jpg','assets/others/scarf/a04.jpg','assets/others/scarf/b06.jpg','assets/others/scarf/b01.jpg','assets/others/scarf/b04.jpg','assets/others/scarf/b03.jpg','assets/others/scarf/b05.jpg'], r: 1.742 },
+  { kind: 'package', s: 'big', info: ['바스리후레 패키지 리디자인', 'Package Design · 2026'], images: ['assets/others/pkg/01.jpg','assets/others/pkg/03.jpg','assets/others/pkg/04.jpg','assets/others/pkg/05.jpg','assets/others/pkg/08.jpg','assets/others/pkg/09.jpg','assets/others/pkg/10.jpg','assets/others/pkg/02.jpg','assets/others/pkg/06.jpg','assets/others/pkg/07.jpg'], r: 1.333 },
   { kind: 'surface', info: ['트라이앵글 스카프', 'Surface Design · 착용 이미지는 합성 목업'], images: ['assets/others/scarf/c02.jpg','assets/others/scarf/c01.jpg','assets/others/scarf/c03.jpg','assets/others/scarf/c04.jpg','assets/others/scarf/c05.jpg'], r: .595 },
-  { kind: 'surface', info: ['스카프 패턴 응용 제품', 'Surface Design · 패키지 · 노트 목업'], images: ['assets/others/scarf/d05.jpg','assets/others/scarf/d01.jpg','assets/others/scarf/d02.jpg','assets/others/scarf/d03.jpg','assets/others/scarf/d04.jpg'], r: .75 },
+  { kind: 'surface', s: 'wide', info: ['스카프 패턴 응용 제품', 'Surface Design · 패키지 · 노트 목업'], images: ['assets/others/scarf/d05.jpg','assets/others/scarf/d01.jpg','assets/others/scarf/d02.jpg','assets/others/scarf/d03.jpg','assets/others/scarf/d04.jpg'], r: .75 },
+  { kind: 'surface', s: 'tall', info: ['트윌리 · 스퀘어 스카프', 'Surface Design · 실물 제작 · 착용 촬영'], images: ['assets/others/scarf/b02.jpg','assets/others/scarf/a02.jpg','assets/others/scarf/a01.jpg','assets/others/scarf/a03.jpg','assets/others/scarf/a04.jpg','assets/others/scarf/b06.jpg','assets/others/scarf/b01.jpg','assets/others/scarf/b04.jpg','assets/others/scarf/b03.jpg','assets/others/scarf/b05.jpg'], r: 1.742 },
   { kind: 'graphic', info: ['균형', 'Graphic Design · Poster'], images: ['assets/others/graphic/01.jpg'], r: 1.411 },
-  { kind: 'graphic', info: ['깃이 번지다', 'Graphic Design · 포스터 · 배너 · 리플렛 · 모션 포스터'], images: ['assets/others/graphic/b02.jpg','assets/others/graphic/b03.jpg','assets/others/graphic/b04.jpg','assets/others/graphic/b01.jpg','assets/others/graphic/b05.jpg','assets/others/graphic/b06.jpg'], video: 'https://youtube.com/shorts/wv9fSH_8VlI', r: 1.5 },
-  { kind: 'motion', info: ["올빼미", "Motion Graphic · 영화 인트로"], images: [], poster: 'assets/others/motion/final.jpg', video: 'assets/others/motion/final.mp4', r: .5625 },
-  { kind: 'surface', info: ['넥타이 · Orange', 'Surface Design · 넥타이 디자인 · 착용 촬영'], images: ['assets/others/tie/o03.jpg','assets/others/tie/o01.jpg','assets/others/tie/o02.jpg','assets/others/tie/o04.jpg','assets/others/tie/o05.jpg','assets/others/tie/o06.jpg','assets/others/tie/o07.jpg'], r: 1.333 },
-  { kind: 'surface', info: ['넥타이 · Blue', 'Surface Design · 넥타이 디자인 · 착용 촬영'], images: ['assets/others/tie/b05.jpg','assets/others/tie/b01.jpg','assets/others/tie/b02.jpg','assets/others/tie/b03.jpg','assets/others/tie/b04.jpg','assets/others/tie/b06.jpg','assets/others/tie/b07.jpg'], r: 1.333 },
-  { kind: 'textile', info: ['태양 · 목성 · 해왕성', 'Textile · 손으로 엮은 작품 · 행성을 소재로'], images: ['assets/others/textile/h01.jpg','assets/others/textile/h04.jpg','assets/others/textile/h07.jpg','assets/others/textile/h02.jpg','assets/others/textile/h05.jpg','assets/others/textile/h08.jpg','assets/others/textile/h03.jpg','assets/others/textile/h06.jpg','assets/others/textile/h09.jpg'], r: 1.414 },
-  { kind: 'textile', info: ['초 · 피터사이트 · 호피석', 'Textile · Weaving'], images: ['assets/others/textile/w01.jpg','assets/others/textile/w02.jpg','assets/others/textile/w03.jpg','assets/others/textile/w04.jpg','assets/others/textile/w05.jpg','assets/others/textile/w06.jpg'], r: 1.333 },
-  { kind: 'motion', info: ['Motion Graphic', 'Motion Graphic'], images: [], poster: 'assets/others/motion/mid.jpg', video: 'assets/others/motion/mid.mp4', r: .5625 }
+  { kind: 'graphic', s: 'big', info: ['깃이 번지다', 'Graphic Design · 포스터 · 배너 · 리플렛 · 모션 포스터'], images: ['assets/others/graphic/b02.jpg','assets/others/graphic/b03.jpg','assets/others/graphic/b04.jpg','assets/others/graphic/b01.jpg','assets/others/graphic/b05.jpg','assets/others/graphic/b06.jpg'], video: 'https://youtube.com/shorts/wv9fSH_8VlI', r: 1.5 },
+  { kind: 'motion', s: 'wide', info: ["올빼미", "Motion Graphic · 영화 인트로"], images: [], poster: 'assets/others/motion/final.jpg', video: 'assets/others/motion/final.mp4', r: .5625 },
+  { kind: 'surface', s: 'tall', info: ['넥타이 · Orange', 'Surface Design · 넥타이 디자인 · 착용 촬영'], images: ['assets/others/tie/o03.jpg','assets/others/tie/o01.jpg','assets/others/tie/o02.jpg','assets/others/tie/o04.jpg','assets/others/tie/o05.jpg','assets/others/tie/o06.jpg','assets/others/tie/o07.jpg'], r: 1.333 },
+  { kind: 'surface', s: 'tall', info: ['넥타이 · Blue', 'Surface Design · 넥타이 디자인 · 착용 촬영'], images: ['assets/others/tie/b05.jpg','assets/others/tie/b01.jpg','assets/others/tie/b02.jpg','assets/others/tie/b03.jpg','assets/others/tie/b04.jpg','assets/others/tie/b06.jpg','assets/others/tie/b07.jpg'], r: 1.333 },
+  { kind: 'textile', s: 'big', info: ['태양 · 목성 · 해왕성', 'Textile · 손으로 엮은 작품 · 행성을 소재로'], images: ['assets/others/textile/h01.jpg','assets/others/textile/h04.jpg','assets/others/textile/h07.jpg','assets/others/textile/h02.jpg','assets/others/textile/h05.jpg','assets/others/textile/h08.jpg','assets/others/textile/h03.jpg','assets/others/textile/h06.jpg','assets/others/textile/h09.jpg'], r: 1.414 },
+  { kind: 'textile', s: 'tall', info: ['초 · 피터사이트 · 호피석', 'Textile · Weaving'], images: ['assets/others/textile/w01.jpg','assets/others/textile/w02.jpg','assets/others/textile/w03.jpg','assets/others/textile/w04.jpg','assets/others/textile/w05.jpg','assets/others/textile/w06.jpg'], r: 1.333 },
+  { kind: 'motion', s: 'wide', info: ['Motion Graphic', 'Motion Graphic'], images: [], poster: 'assets/others/motion/mid.jpg', video: 'assets/others/motion/mid.mp4', r: .5625 }
 ];
 
 // image height/width ratios (generated) — used to pick a preview grid that doesn't crop badly
@@ -29,30 +30,47 @@ window.IMG_R = {"assets/others/graphic/01.jpg": 1.4111, "assets/others/graphic/b
   const hasImg = w => w.images && w.images.length;
   const tint = (w, op) => `color-mix(in srgb, ${KIND[w.kind][1]} ${op}%, var(--paper))`;
 
-  // hover preview: try 2×2, 3 columns, 2 columns, 2 rows; keep the one whose cells match the images' shape (little cropping)
-  const LAY = [['q4', 4, c => c], ['c3', 3, c => c * 3], ['c2', 2, c => c * 2], ['r2', 2, c => c / 2]];
+  // hover preview: several images in a grid whose cells match the images' shape (little cropping)
+  const SPAN = { big: [2, 2], tall: [1, 2], wide: [2, 1] }, ROW = 1.1;   // row height = 1.1 × column width
+  const LAY = [ // name, cell shapes as multiples of the tile ratio
+    ['n9', Array(9).fill(1)], ['q6', Array(6).fill(1.5)], ['q4', [1, 1, 1, 1]], ['l3', [2, 1, 1]],
+    ['c4', [4, 4, 4, 4]], ['c3', [3, 3, 3]], ['c2', [2, 2]], ['r3', [1 / 3, 1 / 3, 1 / 3]], ['r2', [.5, .5]]];
   function layout(w) {
-    if (!hasImg(w) || w.images.length < 3) return null;
-    const cr = 1.25, pool = w.images.slice(1).map(src => ({ src, r: IMG_R[src] || 1 }));
-    for (const [name, k, cell] of LAY) {
-      if (pool.length < k) continue;
-      const c = cell(cr), pick = pool.map(p => ({ ...p, e: Math.abs(Math.log(p.r / c)) })).sort((a, b) => a.e - b.e).slice(0, k);
-      if (pick[k - 1].e < .3) return { name, imgs: pick.map(p => p.src) };
+    if (!hasImg(w) || w.images.length < 2) return null;
+    const [c, r] = SPAN[w.s] || [1, 1], cr = ROW * r / c;
+    let best = null;
+    for (const [name, cells] of LAY) {
+      if (w.images.length < cells.length) continue;
+      const used = new Set(), pick = [];
+      let err = 0, worst = 0;
+      for (const m of cells) {
+        let bi = -1, be = 9;
+        w.images.forEach((src, j) => { if (used.has(j)) return; const e = Math.abs(Math.log((IMG_R[src] || 1) / (m * cr))); if (e < be - .02) { be = e; bi = j; } });
+        used.add(bi); pick.push(w.images[bi]); err += be; worst = Math.max(worst, be);
+      }
+      const score = err / cells.length - .035 * Math.min(cells.length, 6);
+      if (worst < .42 && (!best || score < best.score)) best = { name, imgs: pick, score };
     }
-    return null;
+    return best;
   }
 
   OTHERS.forEach((w, i) => {
-    const el = document.createElement('figure'); el.className = 'g-item'; el.tabIndex = 0; el.style.setProperty('--i', i);
+    const el = document.createElement('figure'); el.className = 'g-item' + (w.s ? ' s-' + w.s : ''); el.tabIndex = 0; el.style.setProperty('--i', i);
     const L = layout(w);
     const yt = w.video && ytId(w.video);
     const main = !hasImg(w) && w.poster ? `<img src="${w.poster}" alt="" loading="lazy" style="aspect-ratio:1/${w.r};object-fit:cover">` : !hasImg(w) && yt ? `<img src="https://i.ytimg.com/vi/${yt}/hqdefault.jpg" alt="" loading="lazy" onerror="this.style.background='${tint(w, 16)}';this.removeAttribute('src')" style="aspect-ratio:1/${w.r};object-fit:cover">` : hasImg(w) ? `<img src="${w.images[0]}" alt="${w.info ? w.info[0] : ''}" loading="lazy">` : `<div class="ph" style="aspect-ratio:1/${w.r};background:${tint(w, 16)}"></div>`;
-    const prev = L ? `<div class="g-prev ${L.name}">` + L.imgs.map(src => `<img src="${src}" alt="" loading="lazy">`).join('') + '</div>' : '';
+    const prev = L ? `<div class="g-prev ${L.name}">` + L.imgs.map(src => `<span><img src="${src}" alt="" loading="lazy"></span>`).join('') + '</div>' : '';
+    if (L) el.classList.add('has-prev');
+    // motion: a muted loop plays once the cover lifts
+    const vid = w.video && !yt && /\.mp4$/.test(w.video) ? `<video class="g-vid" src="${w.video}" muted loop playsinline preload="none"></video>` : '';
     const play = (w.kind === 'motion' || (w.video && !hasImg(w))) ? '<i class="g-play"></i>' : '';
     const info = w.info ? `<span class="g-info" tabindex="0" aria-label="${w.info[0]}">${SHAPE_SVG(KIND[w.kind][0], KIND[w.kind][1])}<span class="g-tip"><b>${w.info[0]}</b>${w.info[1] || ''}</span></span>` : '';
     // closed state: a colour block with the category shape covers the work, like a drawer front
     const cover = `<div class="g-cover" style="background:${tint(w, 18)}"><span class="g-shape">${SHAPE_SVG(KIND[w.kind][0], KIND[w.kind][1])}</span></div>`;
-    el.innerHTML = main + prev + play + cover + info;
+    el.innerHTML = main + prev + vid + play + cover + info;
+    const v = el.querySelector('.g-vid'); let vt;
+    if (v) { el.addEventListener('mouseenter', () => { vt = setTimeout(() => { v.play().catch(() => {}); el.classList.add('playing'); }, 700); });
+      el.addEventListener('mouseleave', () => { clearTimeout(vt); v.pause(); el.classList.remove('playing'); }); }
     el.addEventListener('click', e => { if (e.target.closest('.g-info')) return; setTimeout(() => open(i), 90); });
     el.addEventListener('keydown', e => { if (e.key === 'Enter') open(i); });
     g.appendChild(el);
