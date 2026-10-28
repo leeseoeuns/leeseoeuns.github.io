@@ -203,7 +203,8 @@ window.ROOMS = [
     17,
     17
    ]
-  ]
+  ],
+  "link": "https://m.site.naver.com/2jbdb"
  },
  {
   "no": "02",
@@ -708,6 +709,7 @@ window.ROOMS = [
     11,
     11
    ]
-  ]
+  ],
+  "link": "https://grab-myrtle-14094177.figma.site/"
  }
 ];

@@ -370,3 +370,5 @@ img{display:block;max-width:100%}
 .profile.show .pf-lang i{animation:bar 1.1s var(--ease) .6s both}
 @keyframes bar{from{background-size:0 100%,100% 100%}}
 .pf-right{gap:36px}
+.side .live{font-size:13px;align-self:flex-start;border-bottom:1px solid currentColor;padding-bottom:1px}
+@media (max-width:900px){.side .live{display:none}}
