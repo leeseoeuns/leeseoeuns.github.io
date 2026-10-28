@@ -10,10 +10,10 @@ window.OTHERS = [
   { kind: 'surface', info: ['스카프 패턴 응용 제품', 'Surface Design · 패키지 · 노트 목업'], images: ['assets/others/scarf/d05.jpg','assets/others/scarf/d01.jpg','assets/others/scarf/d02.jpg','assets/others/scarf/d03.jpg','assets/others/scarf/d04.jpg'], r: .75 },
   { kind: 'graphic', info: ['균형', 'Graphic Design · Poster'], images: ['assets/others/graphic/01.jpg'], r: 1.411 },
   { kind: 'graphic', info: ['깃이 번지다', 'Graphic Design · 포스터 · 배너 · 리플렛 · 모션 포스터'], images: ['assets/others/graphic/b02.jpg','assets/others/graphic/b03.jpg','assets/others/graphic/b04.jpg','assets/others/graphic/b01.jpg','assets/others/graphic/b05.jpg','assets/others/graphic/b06.jpg'], video: 'https://youtube.com/shorts/wv9fSH_8VlI', r: 1.5 },
-  { kind: 'motion', info: ["모션그래픽 · 기말", "Motion Graphic · 0:16"], images: [], poster: 'assets/others/motion/final.jpg', video: 'assets/others/motion/final.mp4', r: .5625 },
+  { kind: 'motion', info: ["올빼미", "Motion Graphic · 영화 인트로"], images: [], poster: 'assets/others/motion/final.jpg', video: 'assets/others/motion/final.mp4', r: .5625 },
   { kind: 'surface', info: ['넥타이 디자인', 'Surface Design'], images: [], r: 1.33, n: 2 },
   { kind: 'textile', info: ['Weaving · Handwoven', 'Textile · 6 pieces'], images: [], r: .75, n: 6 },
-  { kind: 'motion', info: ['모션그래픽 · 중간', 'Motion Graphic · 0:10'], images: [], poster: 'assets/others/motion/mid.jpg', video: 'assets/others/motion/mid.mp4', r: .5625 }
+  { kind: 'motion', info: ['Motion Graphic', 'Motion Graphic'], images: [], poster: 'assets/others/motion/mid.jpg', video: 'assets/others/motion/mid.mp4', r: .5625 }
 ];
 
 // image height/width ratios (generated) — used to pick a preview grid that doesn't crop badly
@@ -31,7 +31,7 @@ window.IMG_R = {"assets/others/graphic/01.jpg": 1.4111, "assets/others/graphic/b
   const LAY = [['q4', 4, c => c], ['c3', 3, c => c * 3], ['c2', 2, c => c * 2], ['r2', 2, c => c / 2]];
   function layout(w) {
     if (!hasImg(w) || w.images.length < 3) return null;
-    const cr = IMG_R[w.images[0]] || w.r, pool = w.images.slice(1).map(src => ({ src, r: IMG_R[src] || 1 }));
+    const cr = 1.25, pool = w.images.slice(1).map(src => ({ src, r: IMG_R[src] || 1 }));
     for (const [name, k, cell] of LAY) {
       if (pool.length < k) continue;
       const c = cell(cr), pick = pool.map(p => ({ ...p, e: Math.abs(Math.log(p.r / c)) })).sort((a, b) => a.e - b.e).slice(0, k);
