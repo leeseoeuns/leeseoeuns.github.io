@@ -15,11 +15,11 @@
 </head>
 <body>
 <nav class="nav" id="nav">
-  <a class="brand link" href="#top" data-text="Lee Seoeun"><span>Lee Seoeun</span></a>
+  <a class="brand link" href="#profile" id="brand" data-text="Lee Seoeun" aria-haspopup="dialog"><span>Lee Seoeun</span></a>
   <ul>
     <li><a class="link" href="#archive" data-text="Archive"><span>Archive</span></a></li>
     <li><a class="link" href="#statement" data-text="Statement"><span>Statement</span></a></li>
-    <li><a class="link" href="#contact" data-text="Information"><span>Information</span></a></li>
+    <li><a class="link" href="#contact" data-text="Connect"><span>Connect</span></a></li>
   </ul>
 </nav>
 
@@ -62,21 +62,31 @@
   </div>
 </section>
 
-<section class="section about" id="contact">
-  <h2>Information</h2>
-  <div>
-    <div class="who"><b>이서은</b><span>Lee Seoeun · UX/UI Designer</span><p class="kr">건국대학교 커뮤니케이션디자인학과 24학번 · 3학년 재학 중</p></div>
+<section class="section connect" id="contact">
+  <h2>Connect</h2>
+  <div class="contacts">
     <a class="mail link" href="mailto:leeseoeuns@gmail.com" data-text="leeseoeuns@gmail.com ↗"><span>leeseoeuns@gmail.com ↗</span></a>
-    <div class="facts">
-      <div><h3>Tools</h3><div class="tools"><span>Figma</span><span>Photoshop</span><span>Illustrator</span><span>InDesign</span><span>After Effects</span><span>Claude</span><span>ChatGPT</span><span>Gemini</span><span>Midjourney</span></div></div>
-    </div>
+    <a class="mail link" href="tel:01048113947" data-text="010-4811-3947 ↗"><span>010-4811-3947 ↗</span></a>
   </div>
 </section>
 
-<footer class="foot">
-  <a class="link" href="mailto:leeseoeuns@gmail.com" data-text="leeseoeuns@gmail.com"><span>leeseoeuns@gmail.com</span></a>
-  <span>© 2026 Lee Seoeun</span>
-</footer>
+<!-- Profile (opens from the name) -->
+<div class="profile" id="profile" role="dialog" aria-modal="true" aria-label="Profile" hidden>
+  <div class="pf-top"><span class="brand">Lee Seoeun</span><button class="pill" id="pfClose">Close ✕</button></div>
+  <div class="pf-body">
+    <div class="pf-left">
+      <p class="pf-k">Profile</p>
+      <h2 class="kr">이서은</h2>
+      <p class="pf-role">Lee Seoeun · UX/UI Designer</p>
+      <p class="pf-lead kr">사람이 놓인 맥락을 먼저 읽고,<br>그 맥락에 맞는 구조로 답합니다.</p>
+    </div>
+    <div class="pf-right">
+      <div><p class="pf-k">Education</p><p class="kr">건국대학교 커뮤니케이션디자인학과<br>24학번 · 3학년 재학 중</p></div>
+      <div><p class="pf-k">Tools</p><div class="tools"><span>Figma</span><span>Photoshop</span><span>Illustrator</span><span>InDesign</span><span>After Effects</span><span>Claude</span><span>ChatGPT</span><span>Gemini</span><span>Midjourney</span></div></div>
+      <div><p class="pf-k">Contact</p><a class="link pf-mail" href="mailto:leeseoeuns@gmail.com" data-text="leeseoeuns@gmail.com ↗"><span>leeseoeuns@gmail.com ↗</span></a><br><a class="link pf-mail" href="tel:01048113947" data-text="010-4811-3947 ↗"><span>010-4811-3947 ↗</span></a></div>
+    </div>
+  </div>
+</div>
 
 <script src="js/common.js"></script>
 <script src="js/shapes.js"></script>

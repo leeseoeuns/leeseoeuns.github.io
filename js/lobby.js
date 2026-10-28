@@ -61,7 +61,16 @@
   }
 
   // 3 · smooth anchor scroll with a short delay so the button press reads
-  document.querySelectorAll('a[href^="#"]').forEach(a => a.addEventListener('click', e => {
+  // profile opens from the name; it slides in, staggered
+  const pf = document.getElementById('profile');
+  pf.querySelectorAll('.pf-left > *, .pf-right > *').forEach((el, i) => { el.classList.add('reveal-p'); el.style.transitionDelay = (.25 + i * .07) + 's'; });
+  const openPf = () => { pf.hidden = false; requestAnimationFrame(() => pf.classList.add('show')); document.body.style.overflow = 'hidden'; };
+  const closePf = () => { pf.classList.remove('show'); document.body.style.overflow = ''; setTimeout(() => { pf.hidden = true; }, 700); };
+  document.getElementById('brand').addEventListener('click', e => { e.preventDefault(); setTimeout(openPf, 110); });
+  document.getElementById('pfClose').addEventListener('click', closePf);
+  addEventListener('keydown', e => { if (e.key === 'Escape' && pf.classList.contains('show')) closePf(); });
+
+  document.querySelectorAll('a[href^="#"]:not(#brand)').forEach(a => a.addEventListener('click', e => {
     const t = document.querySelector(a.getAttribute('href')); if (!t) return; e.preventDefault();
     setTimeout(() => smooth(t.getBoundingClientRect().top + scrollY - (a.getAttribute('href') === '#top' ? 0 : 40)), 120);
   }));

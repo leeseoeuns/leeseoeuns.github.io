@@ -353,7 +353,7 @@ window.ROOMS = [
   "type": "Mobile app · 2026",
   "paper": "#EEEDF7",
   "ink": "#111111",
-  "accent": "#504AFA",
+  "accent": "#FB8E00",
   "dark": false,
   "docent": {
    "2": [
@@ -485,7 +485,7 @@ window.ROOMS = [
   "type": "Personal project · 2025",
   "paper": "#1C1428",
   "ink": "#F4F0FA",
-  "accent": "#E0457B",
+  "accent": "#442D67",
   "dark": true,
   "docent": {
    "2": [
@@ -589,6 +589,7 @@ window.ROOMS = [
     "src": "assets/works/04/11.jpg",
     "r": 0.5336
    }
-  ]
+  ],
+  "ui": "#65F934"
  }
 ];

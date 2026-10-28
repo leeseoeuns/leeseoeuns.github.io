@@ -4,7 +4,7 @@
   const R = ROOMS[idx], P = R.pages, N = P.length, next = ROOMS[(idx + 1) % ROOMS.length];
   const $ = id => document.getElementById(id), pad = n => String(n).padStart(2, '0');
   const root = document.documentElement;
-  root.style.setProperty('--accent', R.accent);
+  root.style.setProperty('--accent', R.ui || R.accent);
   if (R.dark) root.classList.add('dark'); else root.style.setProperty('--paper', R.paper);
   document.title = `${R.no} ${R.en} — Lee Seoeun`;
   $('roomNo').textContent = 'Room ' + R.no; $('roomEn').textContent = R.en; $('roomKo').textContent = R.ko;
