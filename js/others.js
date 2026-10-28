@@ -17,6 +17,9 @@ window.OTHERS = [
   { kind: 'motion', info: ['모션그래픽 03', 'Motion Graphic'], images: [], video: '', r: .75, n: 1 }
 ];
 
+// image height/width ratios (generated) — used to pick a preview grid that doesn't crop badly
+window.IMG_R = {"assets/others/graphic/01.jpg": 1.4111, "assets/others/graphic/b01.jpg": 1.4138, "assets/others/graphic/b02.jpg": 1.5, "assets/others/pkg/01.jpg": 1.3333, "assets/others/pkg/02.jpg": 0.75, "assets/others/pkg/03.jpg": 1.3333, "assets/others/pkg/04.jpg": 1.3333, "assets/others/pkg/05.jpg": 1.3333, "assets/others/pkg/06.jpg": 1.3333, "assets/others/pkg/07.jpg": 1.3333, "assets/others/pkg/08.jpg": 1.3333, "assets/others/pkg/09.jpg": 1.3333, "assets/others/pkg/10.jpg": 1.3333, "assets/others/scarf/a01.jpg": 8.982, "assets/others/scarf/a02.jpg": 1.0, "assets/others/scarf/a03.jpg": 1.145, "assets/others/scarf/a04.jpg": 1.5625, "assets/others/scarf/b01.jpg": 2.1186, "assets/others/scarf/b02.jpg": 1.7442, "assets/others/scarf/b03.jpg": 1.7422, "assets/others/scarf/b04.jpg": 1.7422, "assets/others/scarf/b05.jpg": 1.7422, "assets/others/scarf/b06.jpg": 1.7422, "assets/others/scarf/c01.jpg": 1.655, "assets/others/scarf/c02.jpg": 0.5947, "assets/others/scarf/c03.jpg": 1.5576, "assets/others/scarf/c04.jpg": 1.7422, "assets/others/scarf/c05.jpg": 1.5957, "assets/others/scarf/d01.jpg": 1.1202, "assets/others/scarf/d02.jpg": 1.1202, "assets/others/scarf/d03.jpg": 1.1202, "assets/others/scarf/d04.jpg": 0.668, "assets/others/scarf/d05.jpg": 0.75};
+
 (function () {
   const C = SHAPE_COLORS;
   const KIND = { package: ['square', C.ink], surface: ['circle', C.blue], graphic: ['pentagon', C.green], motion: ['triangle', C.pink], textile: ['star', C.orange] };
@@ -25,19 +28,30 @@ window.OTHERS = [
   const hasImg = w => w.images && w.images.length;
   const tint = (w, op) => `color-mix(in srgb, ${KIND[w.kind][1]} ${op}%, var(--paper))`;
 
-  // preview layout on hover: 2–4 cells, picked by how many images and their orientation
-  function cells(w) { if (!hasImg(w) && w.video) return 0; const n = hasImg(w) ? w.images.length - 1 : (w.n || 1); if (n < 2) return 0; if (n === 2) return 2; return w.r >= 1 ? 3 : 4; }
+  // hover preview: try 2×2, 3 columns, 2 columns, 2 rows; keep the one whose cells match the images' shape (little cropping)
+  const LAY = [['q4', 4, c => c], ['c3', 3, c => c * 3], ['c2', 2, c => c * 2], ['r2', 2, c => c / 2]];
+  function layout(w) {
+    if (!hasImg(w) || w.images.length < 3) return null;
+    const cr = IMG_R[w.images[0]] || w.r, pool = w.images.slice(1).map(src => ({ src, r: IMG_R[src] || 1 }));
+    for (const [name, k, cell] of LAY) {
+      if (pool.length < k) continue;
+      const c = cell(cr), pick = pool.map(p => ({ ...p, e: Math.abs(Math.log(p.r / c)) })).sort((a, b) => a.e - b.e).slice(0, k);
+      if (pick[k - 1].e < .3) return { name, imgs: pick.map(p => p.src) };
+    }
+    return null;
+  }
 
   OTHERS.forEach((w, i) => {
     const el = document.createElement('figure'); el.className = 'g-item'; el.tabIndex = 0; el.style.setProperty('--i', i);
-    const k = cells(w);
+    const L = layout(w);
     const yt = w.video && ytId(w.video);
     const main = !hasImg(w) && yt ? `<img src="https://i.ytimg.com/vi/${yt}/hqdefault.jpg" alt="" loading="lazy" onerror="this.style.background='${tint(w, 16)}';this.removeAttribute('src')" style="aspect-ratio:1/${w.r};object-fit:cover">` : hasImg(w) ? `<img src="${w.images[0]}" alt="${w.info ? w.info[0] : ''}" loading="lazy">` : `<div class="ph" style="aspect-ratio:1/${w.r};background:${tint(w, 16)}"></div>`;
-    let prev = '';
-    if (k) { prev = `<div class="g-prev c${k}">` + Array.from({ length: k }, (_, j) => hasImg(w) && w.images[j + 1] ? `<img src="${w.images[j + 1]}" alt="" loading="lazy">` : `<span style="background:${tint(w, 22 + j * 8)}"></span>`).join('') + '</div>'; }
+    const prev = L ? `<div class="g-prev ${L.name}">` + L.imgs.map(src => `<img src="${src}" alt="" loading="lazy">`).join('') + '</div>' : '';
     const play = (w.kind === 'motion' || w.video) ? '<i class="g-play"></i>' : '';
     const info = w.info ? `<span class="g-info" tabindex="0" aria-label="${w.info[0]}">${SHAPE_SVG(KIND[w.kind][0], KIND[w.kind][1])}<span class="g-tip"><b>${w.info[0]}</b>${w.info[1] || ''}</span></span>` : '';
-    el.innerHTML = main + prev + play + info;
+    // closed state: a colour block with the category shape covers the work, like a drawer front
+    const cover = `<div class="g-cover" style="background:${tint(w, 18)}"><span class="g-shape">${SHAPE_SVG(KIND[w.kind][0], KIND[w.kind][1])}</span></div>`;
+    el.innerHTML = main + prev + play + cover + info;
     el.addEventListener('click', e => { if (e.target.closest('.g-info')) return; setTimeout(() => open(i), 90); });
     el.addEventListener('keydown', e => { if (e.key === 'Enter') open(i); });
     g.appendChild(el);

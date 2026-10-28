@@ -388,7 +388,8 @@ img{display:block;max-width:100%}
 .g-prev{position:absolute;inset:0;display:grid;gap:3px;opacity:0;transition:opacity .45s var(--ease) .05s}
 .g-prev.c2{grid-template-columns:1fr 1fr}
 .g-prev.c3{grid-template-columns:1fr 1fr 1fr}
-.g-prev.c4{grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr}
+.g-prev.q4{grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr}
+.g-prev.r2{grid-template-rows:1fr 1fr}
 .g-prev>*{width:100%;height:100%;object-fit:cover;transform:scale(1.08);transition:transform .7s var(--ease)}
 .g-item:hover .g-prev,.g-item:focus-visible .g-prev{opacity:1}
 .g-item:hover .g-prev>*{transform:none}
@@ -430,3 +431,15 @@ img{display:block;max-width:100%}
 .g-info>svg{width:14px;height:14px}
 .g-item:hover .g-tip{opacity:1;transform:none;transition-delay:.35s}
 .g-tip{right:6px;bottom:30px}
+
+/* Others: covered until hover */
+.g-cover{position:absolute;inset:0;display:grid;place-items:center;z-index:1;transition:opacity .55s var(--ease) .05s,transform .7s var(--ease)}
+.g-shape{width:22%;max-width:72px;aspect-ratio:1;transition:transform .8s var(--spring)}
+.g-shape svg{width:100%;height:100%;display:block}
+.g-item:hover .g-cover,.g-item:focus-visible .g-cover{opacity:0;transform:scale(1.04)}
+.g-item:hover .g-shape{transform:rotate(180deg) scale(.6)}
+.g-item .g-play{z-index:0}
+.g-info{z-index:3}
+.g-item:not(:hover) .g-info{opacity:0}
+.g-info{transition:opacity .3s .2s}
+@media (hover:none){.g-cover{display:none}.g-item .g-info{opacity:1}}
