@@ -637,3 +637,5 @@ img{display:block;max-width:100%}
 .curtain.wipe{visibility:visible;pointer-events:auto}
 .curtain.wipe .wp{position:absolute;inset:0;background:var(--bg);transform:translateY(100%)}
 html.arr-w::after{content:"";position:fixed;inset:0;z-index:899;background:var(--arr)}
+/* PC: three rows for now (6 × 3) — the fourth row comes back once the drawers fill past ~10 */
+@media (min-width:901px){.cabinet .drawer:nth-child(n+19){display:none}}
