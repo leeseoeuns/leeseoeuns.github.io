@@ -126,6 +126,28 @@ img{display:block;max-width:100%}
 @keyframes locked{0%,100%{transform:none}25%{transform:translateY(3px)}50%{transform:translateY(-1px)}75%{transform:translateY(2px)}}
 .drawer.empty::after{content:"empty";position:absolute;right:10px;bottom:8px;font-size:11px;color:var(--mute);opacity:0;transition:opacity .3s}
 .drawer.empty:hover::after{opacity:1}
+
+/* ---- drawer choreography: one step at a time on hover, quick and together on the way back ----
+   1 (0s)     the bar spins once and becomes a regular shape
+   2 (0.65s)  the front is pulled down with the shape like a handle
+   3 (1.35s)  the cover rises out of the drawer
+   4 (1.6s)   the shape slides to the side, then the title writes in */
+.drawer .front{transition:transform .5s var(--io),box-shadow .4s}
+.drawer .handle{transition:top .45s var(--io),left .35s var(--io),height .35s var(--ease) .22s,border-radius .35s var(--ease) .22s,clip-path .35s var(--ease) .22s,transform .45s var(--ease) .2s}
+.drawer .cover{transition:transform .35s var(--ease),opacity .25s}
+.drawer .no{transition:transform .5s var(--io)}
+.drawer .no em{transition:opacity .15s,transform .2s}
+.drawer .t{transition:opacity .3s .35s}
+.drawer:is(:hover,:focus-visible,.open) .handle{transform:rotate(360deg)}
+.drawer.live:is(:hover,:focus-visible,.open) .handle{transition:transform .7s var(--ease) 0s,height .55s var(--spring) .08s,border-radius .5s var(--ease) .08s,clip-path .55s var(--spring) .08s,
+  top .8s cubic-bezier(.7,0,.25,1) .65s,left .6s var(--spring) 1.6s}
+.drawer.live:is(:hover,:focus-visible,.open) .t{transition:opacity .25s 0s}
+.drawer.live:is(:hover,:focus-visible,.open) .front{transition:transform .8s cubic-bezier(.7,0,.25,1) .65s,box-shadow .6s .9s}
+.drawer.live:is(:hover,:focus-visible,.open) .no{transition:transform .8s cubic-bezier(.7,0,.25,1) .65s}
+.drawer.live:is(:hover,:focus-visible,.open) .cover{transition:transform .9s var(--spring) 1.35s,opacity .4s 1.35s}
+.drawer.live:is(:hover,:focus-visible,.open) .no em{transition:opacity .5s 1.95s,transform .6s var(--ease) 1.95s}
+.drawer.empty:hover .handle{transform:rotate(calc(360deg + var(--rot,0deg)));transition:transform .7s var(--ease) 0s,height .55s var(--spring) .08s,border-radius .5s var(--ease) .08s,clip-path .55s var(--spring) .08s,top .55s var(--spring) .08s}
+.drawer.quick,.drawer.quick *{transition-delay:0s!important}
 .flying{position:fixed;z-index:880;object-fit:cover;border-radius:2px;box-shadow:0 30px 60px rgba(0,0,0,.35);transition:all .9s var(--io)}
 
 /* ---------- statement ---------- */
