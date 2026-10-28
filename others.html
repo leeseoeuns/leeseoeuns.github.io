@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Others — Lee Seoeun</title>
+<meta property="og:type" content="website">
+<meta property="og:title" content="Others — Lee Seoeun">
+<meta property="og:image" content="https://leeseoeuns.github.io/assets/og.png?v=1">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Noto+Sans+KR:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='44' fill='%23504AFA'/%3E%3C/svg%3E">
+</head>
+<body class="others-page">
+<nav class="nav" id="nav">
+  <a class="brand link" href="index.html" data-go data-text="Lee Seoeun"><span>Lee Seoeun</span></a>
+  <ul>
+    <li><a class="link" href="index.html#archive" data-go data-text="Archive"><span>Archive</span></a></li>
+    <li><a class="link on" href="others.html" data-text="Others"><span>Others</span></a></li>
+    <li><a class="link" href="index.html#statement" data-go data-text="Statement"><span>Statement</span></a></li>
+    <li><a class="link" href="index.html#contact" data-go data-text="Connect"><span>Connect</span></a></li>
+  </ul>
+</nav>
+
+<main class="gallery" id="gallery" aria-label="Others gallery"></main>
+
+<div class="viewer" id="viewer" hidden role="dialog" aria-modal="true" aria-label="Image viewer">
+  <button class="v-close" id="vClose" aria-label="Close">✕</button>
+  <button class="v-arrow l" id="vPrev" aria-label="Previous">←</button>
+  <div class="v-stage" id="vStage"></div>
+  <button class="v-arrow r" id="vNext" aria-label="Next">→</button>
+  <div class="v-dots" id="vDots"></div>
+  <div class="v-info" id="vInfo"></div>
+</div>
+
+<script src="js/common.js"></script>
+<script src="js/shapes.js"></script>
+<script src="js/others.js"></script>
+</body>
+</html>
