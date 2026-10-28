@@ -645,3 +645,8 @@ html.arr-w::after{content:"";position:fixed;inset:0;z-index:899;background:var(-
 .g-item:hover .g-prev,.g-item.has-prev:hover .g-prev{transition:none!important}
 .g-item:hover>img{transition-delay:0s!important}
 .g-item:hover .g-tip{transition-delay:.15s!important}
+/* Others v4: fully clear in ~0.2s — the cover simply fades out, nothing spins or zooms */
+.g-cover,.g-item:hover .g-cover,.g-item:focus-visible .g-cover{transition:opacity .2s ease-out 0s!important;transform:none!important}
+.g-shape,.g-item:hover .g-shape{transition:none!important;transform:none!important}
+.g-prev>span>img,.g-item:hover .g-prev>span>img{transform:none!important;transition:none!important}
+.g-item>img,.g-item:hover>img,.g-item>.ph,.g-item:hover>.ph{transform:none!important;transition:none!important}
