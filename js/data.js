@@ -166,6 +166,43 @@ window.ROOMS = [
     "src": "assets/works/01/17.jpg",
     "r": 0.5625
    }
+  ],
+  "parts": [
+   [
+    "Intro",
+    1,
+    1
+   ],
+   [
+    "Research",
+    2,
+    4
+   ],
+   [
+    "Structure",
+    5,
+    7
+   ],
+   [
+    "Design",
+    8,
+    9
+   ],
+   [
+    "Screens",
+    10,
+    14
+   ],
+   [
+    "English Site",
+    15,
+    16
+   ],
+   [
+    "Outro",
+    17,
+    17
+   ]
   ]
  },
  {
@@ -343,6 +380,38 @@ window.ROOMS = [
     "src": "assets/works/02/18.jpg",
     "r": 0.563
    }
+  ],
+  "parts": [
+   [
+    "Intro",
+    1,
+    1
+   ],
+   [
+    "Research",
+    2,
+    7
+   ],
+   [
+    "Strategy",
+    8,
+    9
+   ],
+   [
+    "Design System",
+    10,
+    10
+   ],
+   [
+    "App",
+    11,
+    15
+   ],
+   [
+    "Space",
+    16,
+    18
+   ]
   ]
  },
  {
@@ -475,6 +544,33 @@ window.ROOMS = [
     "src": "assets/works/03/13.jpg",
     "r": 0.5625
    }
+  ],
+  "parts": [
+   [
+    "Intro",
+    1,
+    2
+   ],
+   [
+    "Research",
+    3,
+    4
+   ],
+   [
+    "Features",
+    5,
+    6
+   ],
+   [
+    "Screens",
+    7,
+    11
+   ],
+   [
+    "Outro",
+    12,
+    13
+   ]
   ]
  },
  {
@@ -590,6 +686,28 @@ window.ROOMS = [
     "r": 0.5336
    }
   ],
-  "ui": "#65F934"
+  "ui": "#65F934",
+  "parts": [
+   [
+    "Intro",
+    1,
+    1
+   ],
+   [
+    "Concept",
+    2,
+    3
+   ],
+   [
+    "Web",
+    4,
+    10
+   ],
+   [
+    "Result",
+    11,
+    11
+   ]
+  ]
  }
 ];

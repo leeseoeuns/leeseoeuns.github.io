@@ -108,10 +108,10 @@ img{display:block;max-width:100%}
 .drawer[data-s=diamond] .handle{--c0:polygon(0 0,100% 0,100% 100%,0 100%);--c1:polygon(50% 0,100% 50%,50% 100%,0 50%);--hh:22cqw;--hr:0}
 @property --hole{syntax:'<percentage>';inherits:true;initial-value:0%}
 .drawer[data-s=ring] .handle{--c0:none;--c1:none;--hh:22cqw;--hr:50%;--h1:50%}
-.drawer[data-s=arch] .handle{--c0:polygon(0 0,100% 0,100% 100%,0 100%);--c1:polygon(0 0,100% 0,100% 50%,0 50%);--hh:22cqw;--hr:50%;--h1:50%}
-.drawer[data-s=ring] .handle,.drawer[data-s=arch] .handle{-webkit-mask:radial-gradient(circle closest-side,transparent var(--hole),#000 calc(var(--hole) + .5%));mask:radial-gradient(circle closest-side,transparent var(--hole),#000 calc(var(--hole) + .5%));transition:--hole .5s var(--ease) .1s,top .45s var(--io),left .35s var(--io),height .35s var(--ease) .22s,border-radius .35s var(--ease) .22s,clip-path .35s var(--ease) .22s,transform .45s var(--ease) .2s}
-.drawer[data-s=ring]:hover .handle,.drawer[data-s=arch]:hover .handle{--hole:var(--h1)}
-.drawer.empty[data-s=ring]:hover .handle,.drawer.empty[data-s=arch]:hover .handle{transition:--hole .5s var(--ease) .25s,transform .7s var(--ease) 0s,height .55s var(--spring) .08s,border-radius .5s var(--ease) .08s,clip-path .55s var(--spring) .08s,top .55s var(--spring) .08s}
+.drawer[data-s=star] .handle{--c0:polygon(50% 0,100% 0,100% 0,100% 100%,100% 100%,50% 100%,0 100%,0 100%,0 0,0 0);--c1:polygon(50% 0,61.2% 34.5%,97.6% 34.5%,68.2% 55.9%,79.4% 90.5%,50% 69.1%,20.6% 90.5%,31.8% 55.9%,2.4% 34.5%,38.8% 34.5%);--hh:20.9cqw;--hr:0}
+.drawer[data-s=ring] .handle{-webkit-mask:radial-gradient(circle closest-side,transparent var(--hole),#000 calc(var(--hole) + .5%));mask:radial-gradient(circle closest-side,transparent var(--hole),#000 calc(var(--hole) + .5%));transition:--hole .5s var(--ease) .1s,top .45s var(--io),left .35s var(--io),height .35s var(--ease) .22s,border-radius .35s var(--ease) .22s,clip-path .35s var(--ease) .22s,transform .45s var(--ease) .2s}
+.drawer[data-s=ring]:hover .handle{--hole:var(--h1)}
+.drawer.empty[data-s=ring]:hover .handle{transition:--hole .5s var(--ease) .25s,transform .7s var(--ease) 0s,height .55s var(--spring) .08s,border-radius .5s var(--ease) .08s,clip-path .55s var(--spring) .08s,top .55s var(--spring) .08s}
 .drawer:hover .handle,.drawer:focus-visible .handle,.drawer.open .handle{height:var(--hh);border-radius:var(--hr);clip-path:var(--c1)}
 
 .drawer .no{max-width:calc(100% - 22cqw - 14px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -327,7 +327,7 @@ img{display:block;max-width:100%}
 /* ---------- connect + profile ---------- */
 .connect{display:grid;grid-template-columns:1fr 2fr;gap:40px;align-items:baseline;padding-bottom:clamp(100px,14vw,180px)}
 .connect h2{font-size:24px;font-weight:600}
-.connect .mail{margin-top:0;font-size:36px}
+.connect .mail{margin-top:0;font-size:20px}
 .profile{position:fixed;inset:0;z-index:95;background:var(--paper);overflow:auto;transform:translateX(-100%);transition:transform .7s var(--io);visibility:hidden}
 .profile.show{transform:none;visibility:visible}
 .pf-top{display:flex;justify-content:space-between;align-items:center;padding:24px var(--gutter);font-size:14px}
@@ -344,7 +344,20 @@ img{display:block;max-width:100%}
 .pf-mail{font-size:20px}
 .profile .reveal-p{opacity:0;transform:translateY(16px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
 .profile.show .reveal-p{opacity:1;transform:none}
-@media (max-width:900px){.connect{grid-template-columns:1fr;gap:20px}.connect .mail{font-size:26px}.pf-body{grid-template-columns:1fr;gap:48px}}
-.connect .contacts{display:flex;flex-direction:column;align-items:flex-start;gap:14px}
+@media (max-width:900px){.connect{grid-template-columns:1fr;gap:20px}.connect .mail{font-size:18px}.pf-body{grid-template-columns:1fr;gap:48px}}
+.connect .contacts{display:flex;flex-direction:column;align-items:flex-start;gap:10px}
 @media (hover:none){.link:hover span,.link:hover::after{transform:none}}
 .nav .brand{padding:6px 0;margin:-6px 0}
+
+/* chapter parts */
+.chapters .part{list-style:none;flex:none}
+.chapters .chs{list-style:none;display:none}
+.chapters .part.open .chs{display:block;animation:subIn .45s var(--ease)}
+@keyframes subIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+.chapters .ph{color:var(--ink);font-weight:500}
+.chapters .ph .n{width:44px;color:var(--mute);font-weight:400}
+.chapters .part.open .ph{font-weight:600}
+.chapters .chs button{padding-left:18px;font-size:12px}
+.chapters .chs button .n{width:24px}
+.chapters{gap:6px}
+.chapters .part.single .chs{display:none}

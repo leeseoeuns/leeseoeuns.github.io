@@ -26,7 +26,7 @@
   const cab = document.getElementById('cabinet');
   const live = { 0: 0, 1: 1, 2: 2, 3: 3 };
   // 6 × 4: no shape twice in a row, none repeated straight down a column (same grid as Figma)
-  const GRID = [['square','circle','triangle','pentagon','ring','hexagon'],['ring','diamond','circle','arch','hexagon','square'],['hexagon','square','diamond','ring','pentagon','arch'],['arch','ring','hexagon','square','triangle','diamond']].flat();
+  const GRID = [['square','circle','triangle','pentagon','ring','hexagon'],['ring','diamond','circle','star','hexagon','square'],['hexagon','square','diamond','ring','pentagon','star'],['star','ring','hexagon','square','triangle','diamond']].flat();
   for (let i = 0; i < 24; i++) {
     const r = ROOMS[live[i]];
     const d = document.createElement(r ? 'a' : 'div');

@@ -16,10 +16,20 @@
     const f = document.createElement('figure'); f.className = 'page'; f.id = 'p' + (i + 1); f.style.aspectRatio = `1 / ${p.r}`;
     const im = new Image(); im.src = p.src; im.alt = `${R.en} — ${p.t}`; im.loading = i < 2 ? 'eager' : 'lazy'; im.decoding = 'async';
     im.width = 1440; im.height = Math.round(1440 * p.r); f.appendChild(im); book.appendChild(f);
-    const li = document.createElement('li'); li.innerHTML = `<button><span class="n">${pad(i + 1)}</span><span>${p.t}</span></button>`;
-    li.firstChild.addEventListener('click', () => glide(f)); chapters.appendChild(li);
   });
-  const btns = [...chapters.querySelectorAll('button')];
+  // chapters grouped into parts; only the part being read unfolds
+  const parts = R.parts || [['Pages', 1, N]];
+  const partOf = i => parts.findIndex(p => i + 1 >= p[1] && i + 1 <= p[2]);
+  const btns = []; const partEls = [];
+  parts.forEach(([name, a, b], k) => {
+    const li = document.createElement('li'); li.className = 'part' + (a === b ? ' single' : '');
+    const range = a === b ? pad(a) : pad(a) + '–' + pad(b);
+    li.innerHTML = `<button class="ph"><span class="n">${range}</span><span>${name}</span></button><ol class="chs"></ol>`;
+    li.querySelector('.ph').addEventListener('click', () => glide(book.children[a - 1]));
+    const sub = li.querySelector('.chs');
+    for (let i = a - 1; i < b; i++) { const s2 = document.createElement('li'); s2.innerHTML = `<button><span class="n">${pad(i + 1)}</span><span>${P[i].t}</span></button>`; s2.firstChild.addEventListener('click', () => glide(book.children[i])); sub.appendChild(s2); btns[i] = s2.firstChild; }
+    chapters.appendChild(li); partEls.push(li);
+  });
   $('endTxt').textContent = `— End of Room ${R.no} —`;
   const nx = $('nextRoom'); nx.href = 'room.html?r=' + next.no; nx.dataset.color = next.dark ? '#1C1428' : next.paper;
   nx.innerHTML = `<span class="tile">${SHAPE_SVG(next.shape, next.accent)}</span><span class="lbl">Next → ${next.en}</span>`; nx.setAttribute('aria-label', 'Next room: ' + next.en);
@@ -34,7 +44,7 @@
     const max = document.documentElement.scrollHeight - innerHeight; bar.style.transform = `scaleX(${max > 0 ? scrollY / max : 0})`;
     const mid = innerHeight * .4; let a = 0;
     for (let i = 0; i < pages.length; i++) if (pages[i].getBoundingClientRect().top < mid) a = i;
-    if (a !== cur) { btns[cur] && btns[cur].classList.remove('on'); btns[a].classList.add('on'); cur = a; }
+    if (a !== cur) { btns[cur] && btns[cur].classList.remove('on'); btns[a].classList.add('on'); const pk = partOf(a); partEls.forEach((el, k) => el.classList.toggle('open', k === pk)); cur = a; }
   }
   addEventListener('scroll', onScroll, { passive: true }); onScroll();
   function glide(el) {
