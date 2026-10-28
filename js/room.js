@@ -63,7 +63,9 @@
   function words(p, i) { const d = R.docent[String(i + 1)]; return d ? { h: d[0], b: d[1] } : { h: p.t === 'Cover' ? `${R.en}\n${R.ko}` : p.t, b: '' }; }
   // read aloud (Web Speech API, Korean voice when the device has one)
   const synth = window.speechSynthesis; let voiceOn = !!synth, koVoice = null;
-  const pickVoice = () => { if (!synth) return; const vs = synth.getVoices(); koVoice = vs.find(v => /ko(-|_)KR/i.test(v.lang) && /google|yuna|sora|heami|neural/i.test(v.name)) || vs.find(v => /^ko/i.test(v.lang)) || null; };
+  // prefer neural voices: Edge 'SunHi/InJoon Online (Natural)', then Google, then Apple Yuna; old SAPI voices (Heami) last
+  const rank = v => { const n = v.name; if (/natural|neural|online/i.test(n)) return 0; if (/google/i.test(n)) return 1; if (/yuna|sora|jian|suhyun|premium|enhanced/i.test(n)) return 2; if (/heami/i.test(n)) return 9; return 5; };
+  const pickVoice = () => { if (!synth) return; const ko = synth.getVoices().filter(v => /^ko/i.test(v.lang)); ko.sort((a, b) => rank(a) - rank(b) || (/sunhi|yuna/i.test(b.name) - /sunhi|yuna/i.test(a.name))); koVoice = ko[0] || null; };
   if (synth) { pickVoice(); synth.onvoiceschanged = pickVoice; }
   const vBtn = $('voice');
   function paintVoice() { vBtn.classList.toggle('off', !voiceOn); vBtn.querySelector('.vt').textContent = voiceOn ? '목소리 켜짐' : '목소리 꺼짐'; }
@@ -72,7 +74,7 @@
   function speak(w) {
     if (!synth || !voiceOn) return; synth.cancel();
     const u = new SpeechSynthesisUtterance((w.h.replace(/\n/g, ' ') + '. ' + (w.b || '')).trim());
-    u.lang = 'ko-KR'; if (koVoice) u.voice = koVoice; u.rate = .95; u.pitch = 1; synth.speak(u);
+    u.lang = 'ko-KR'; if (koVoice) u.voice = koVoice; u.rate = koVoice && rank(koVoice) === 0 ? 1 : .95; u.pitch = 1; synth.speak(u);
   }
   function hush() { if (synth) synth.cancel(); }
   addEventListener('pagehide', hush);
