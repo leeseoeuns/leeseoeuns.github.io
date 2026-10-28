@@ -5,8 +5,11 @@
    r: placeholder ratio (height / width) used until real images are added. */
 window.OTHERS = [
   { kind: 'package', info: ['바스리후레 패키지 리디자인', 'Package Design · 2026'], images: ['assets/others/pkg/01.jpg','assets/others/pkg/03.jpg','assets/others/pkg/04.jpg','assets/others/pkg/05.jpg','assets/others/pkg/08.jpg','assets/others/pkg/09.jpg','assets/others/pkg/10.jpg','assets/others/pkg/02.jpg','assets/others/pkg/06.jpg','assets/others/pkg/07.jpg'], r: 1.333 },
-  { kind: 'surface', info: ['스카프 디자인', 'Surface Design'], images: [], r: 1, n: 3 },
-  { kind: 'graphic', info: ['포스터 · 리플렛', 'Graphic Design 1 · 모션 포스터 포함'], images: [], video: 'https://youtube.com/shorts/wv9fSH_8VlI', r: 1.4, n: 3 },
+  { kind: 'surface', info: ['트윌리 · 스퀘어 스카프', 'Surface Design · 실물 제작 · 착용 촬영'], images: ['assets/others/scarf/b02.jpg','assets/others/scarf/a02.jpg','assets/others/scarf/a01.jpg','assets/others/scarf/a03.jpg','assets/others/scarf/a04.jpg','assets/others/scarf/b06.jpg','assets/others/scarf/b01.jpg','assets/others/scarf/b04.jpg','assets/others/scarf/b03.jpg','assets/others/scarf/b05.jpg'], r: 1.742 },
+  { kind: 'surface', info: ['트라이앵글 스카프', 'Surface Design · 착용 이미지는 합성 목업'], images: ['assets/others/scarf/c02.jpg','assets/others/scarf/c01.jpg','assets/others/scarf/c03.jpg','assets/others/scarf/c04.jpg','assets/others/scarf/c05.jpg'], r: .595 },
+  { kind: 'surface', info: ['스카프 패턴 응용 제품', 'Surface Design · 패키지 · 노트 목업'], images: ['assets/others/scarf/d05.jpg','assets/others/scarf/d01.jpg','assets/others/scarf/d02.jpg','assets/others/scarf/d03.jpg','assets/others/scarf/d04.jpg'], r: .75 },
+  { kind: 'graphic', info: ['균형', 'Graphic Design · Poster'], images: ['assets/others/graphic/01.jpg'], r: 1.411 },
+  { kind: 'graphic', info: ['포스터 · 리플렛', 'Graphic Design · 모션 포스터 포함'], images: [], video: 'https://youtube.com/shorts/wv9fSH_8VlI', r: 1.4, n: 3 },
   { kind: 'motion', info: ['모션그래픽 01', 'Motion Graphic'], images: [], video: '', r: .5625, n: 1 },
   { kind: 'surface', info: ['넥타이 디자인', 'Surface Design'], images: [], r: 1.33, n: 2 },
   { kind: 'textile', info: ['Weaving · Handwoven', 'Textile · 6 pieces'], images: [], r: .75, n: 6 },
