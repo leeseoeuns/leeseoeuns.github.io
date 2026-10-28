@@ -475,3 +475,4 @@ img{display:block;max-width:100%}
 .g-item.playing .g-vid{opacity:1}
 @media (max-width:900px){.gallery{--col:calc((100vw - 2*var(--gutter) - 10px)/2)}}
 @media (hover:none){.g-item.has-prev>img{opacity:1}.g-prev,.g-item.has-prev .g-prev{display:none}.g-item>img,.g-item>.ph{filter:none}}
+.pill[hidden]{display:none!important}
