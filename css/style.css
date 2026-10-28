@@ -574,3 +574,20 @@ img{display:block;max-width:100%}
 .wardrobe .inside .half{pointer-events:none}.wardrobe:is(:hover,:focus-visible,.open) .inside .half{pointer-events:auto}
 @media (max-width:900px){.drawer.wardrobe .inside{padding:9% 7% 7%;gap:4px 6%;grid-template-rows:1fr}.wardrobe .cap{display:none}.wardrobe .half b{font-size:9px}.wardrobe .door .t{font-size:11px}}
 @media (hover:none){.wardrobe:not(.open) .half{pointer-events:none!important}}
+/* wardrobe v2: closed it reads as one front with a single vertical bar; on hover the seam draws in, then the doors part */
+.drawer.wardrobe .doors{border:1px solid rgba(17,17,17,.1);border-radius:2px;background:var(--paper)}
+.wardrobe .door{border:0!important;background:var(--paper)}
+.drawer.wardrobe .doors::after{content:"";position:absolute;left:50%;top:0;bottom:0;width:1px;margin-left:-.5px;background:rgba(17,17,17,.2);transform:scaleY(0);transition:transform .25s var(--ease);z-index:2}
+.wardrobe:is(:hover,:focus-visible,.open) .doors::after{transform:scaleY(1);opacity:0;transition:transform .45s var(--io) .1s,opacity .2s .7s}
+.wardrobe:is(:hover,:focus-visible,.open) .doors{background:transparent;border-color:transparent;transition:background 0s .65s,border-color 0s .65s}
+.wardrobe:is(:hover,:focus-visible,.open) .door.l{box-shadow:inset 0 0 0 1px rgba(17,17,17,.1),inset -20px 0 30px rgba(0,0,0,.08)}
+.wardrobe:is(:hover,:focus-visible,.open) .door.r{box-shadow:inset 0 0 0 1px rgba(17,17,17,.1),inset 20px 0 30px rgba(0,0,0,.08)}
+.curtain.plain{visibility:visible;background:var(--bg)!important;opacity:0;transition:opacity .4s var(--ease)}
+.curtain.plain.on{opacity:1;pointer-events:auto}
+/* wardrobe v3: closed = one vertical bar (two flush halves, same thickness as the other handles);
+   hover = the bar becomes a hexagon, then the hexagon splits as the doors open */
+.wardrobe .knob{width:2.5px;height:22cqw}
+.wardrobe .door.l .knob{right:0;border-radius:3px 0 0 3px;clip-path:polygon(0 0,100% 0,100% 100%,0 100%,0 50%)}
+.wardrobe .door.r .knob{left:0;border-radius:0 3px 3px 0;clip-path:polygon(0 0,100% 0,100% 50%,100% 100%,0 100%)}
+.wardrobe:is(:hover,:focus-visible,.open) .door.l .knob{right:0}
+.wardrobe:is(:hover,:focus-visible,.open) .door.r .knob{left:0}

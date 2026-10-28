@@ -35,22 +35,30 @@
     }
     cur.innerHTML = h;
   }
-  if (store.get('curtain') && store.get('curtain') !== '0' && !calm) {   // arrived through a curtain: start covered, then let the shapes fall
-    const color = store.get('curtain'); store.set('curtain', '0');
-    cur.classList.add('cover'); cur.style.setProperty('--bg', color === '1' ? 'var(--ink)' : color);
-    const run = () => { lay(color === '1' ? '' : color); requestAnimationFrame(() => requestAnimationFrame(() => { cur.classList.add('fall'); setTimeout(() => { cur.className = 'curtain'; cur.innerHTML = ''; }, 1100); })); };
-    if (window.SHAPE_SVG) run(); else addEventListener('DOMContentLoaded', run);
+  // shapes only for the top navigation; moving through the portfolio (drawers, next room) is a quiet fade
+  let arr = null; try { arr = JSON.parse(store.get('curtain') || 'null'); } catch (e) {}
+  store.set('curtain', '');
+  if (arr && !calm) {
+    cur.style.setProperty('--bg', arr.c || 'var(--ink)');
+    if (arr.m === 's') {
+      cur.classList.add('cover');
+      const run = () => { lay(arr.c); requestAnimationFrame(() => requestAnimationFrame(() => { cur.classList.add('fall'); setTimeout(() => { cur.className = 'curtain'; cur.innerHTML = ''; }, 1100); })); };
+      if (window.SHAPE_SVG) run(); else addEventListener('DOMContentLoaded', run);
+    } else {
+      cur.classList.add('plain', 'on'); requestAnimationFrame(() => requestAnimationFrame(() => { cur.classList.remove('on'); setTimeout(() => { cur.className = 'curtain'; }, 600); }));
+    }
   }
-  window.go = function (href, color) {
+  window.go = function (href, color, mode) {
     if (calm) { location.href = href; return; }
-    lay(color); cur.className = 'curtain'; void cur.offsetWidth; cur.classList.add('drop');
-    store.set('curtain', color || '1');
-    setTimeout(() => { location.href = href; }, 820);
+    const shapes = mode === 'shapes';
+    store.set('curtain', JSON.stringify({ m: shapes ? 's' : 'p', c: color || '' }));
+    if (shapes) { lay(color); cur.className = 'curtain'; void cur.offsetWidth; cur.classList.add('drop'); setTimeout(() => { location.href = href; }, 820); }
+    else { cur.style.setProperty('--bg', color || 'var(--ink)'); cur.className = 'curtain plain'; void cur.offsetWidth; cur.classList.add('on'); setTimeout(() => { location.href = href; }, 420); }
   };
   document.addEventListener('click', e => {
     const a = e.target.closest('a[data-go]'); if (!a || e.metaKey || e.ctrlKey) return;
     e.preventDefault(); const href = a.getAttribute('href');
-    setTimeout(() => go(href, a.dataset.color), 110); // a breath before leaving
+    setTimeout(() => go(href, a.dataset.color, a.closest('.nav') ? 'shapes' : ''), 110); // a breath before leaving
   });
   addEventListener('pageshow', e => { if (e.persisted) { cur.className = 'curtain'; cur.innerHTML = ''; } });
 })();
