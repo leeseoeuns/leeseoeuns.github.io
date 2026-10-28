@@ -361,3 +361,12 @@ img{display:block;max-width:100%}
 .chapters .chs button .n{width:24px}
 .chapters{gap:6px}
 .chapters .part.single .chs{display:none}
+.pf-list{list-style:none}
+.pf-list li{display:flex;gap:16px;padding:3px 0;font-size:15px}
+.pf-list em{font-style:normal;font-family:var(--sans);color:var(--mute);width:40px;flex:none}
+.pf-lang{list-style:none;display:flex;flex-direction:column;gap:12px;max-width:420px}
+.pf-lang li{display:grid;grid-template-columns:80px 1fr;align-items:center;font-size:15px}
+.pf-lang i{display:block;height:4px;border-radius:2px;background:linear-gradient(var(--ink),var(--ink)) no-repeat 0 0/calc(var(--v) * 100%) 100%,rgba(17,17,17,.1)}
+.profile.show .pf-lang i{animation:bar 1.1s var(--ease) .6s both}
+@keyframes bar{from{background-size:0 100%,100% 100%}}
+.pf-right{gap:36px}
