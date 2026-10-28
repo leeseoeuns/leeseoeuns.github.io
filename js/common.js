@@ -41,7 +41,9 @@
   if (arr && !calm) {
     cur.style.setProperty('--bg', arr.c || 'var(--ink)');
     if (arr.m === 'w') {   // colour curtain: arrived covered, now slides down and away
-      cur.classList.add('wipe', 'up'); document.documentElement.classList.remove('arr-w'); requestAnimationFrame(() => requestAnimationFrame(() => { cur.classList.remove('up'); cur.classList.add('down'); setTimeout(() => { cur.className = 'curtain'; }, 750); }));
+      cur.className = 'curtain wipe'; cur.innerHTML = '<i class="wp"></i>'; document.documentElement.classList.remove('arr-w');
+      cur.firstChild.animate([{ transform: 'translateY(0)' }, { transform: 'translateY(100%)' }], { duration: 750, delay: 120, easing: 'cubic-bezier(.65,0,.35,1)', fill: 'both' })
+        .onfinish = () => { cur.className = 'curtain'; cur.innerHTML = ''; };
     } else if (arr.m === 's') {
       cur.classList.add('cover');
       const run = () => { lay(arr.c); requestAnimationFrame(() => requestAnimationFrame(() => { cur.classList.add('fall'); setTimeout(() => { cur.className = 'curtain'; cur.innerHTML = ''; }, 1100); })); };
@@ -54,7 +56,12 @@
     if (calm) { location.href = href; return; }
     const shapes = mode === 'shapes';
     store.set('curtain', JSON.stringify({ m: shapes ? 's' : mode === 'wipe' ? 'w' : 'p', c: color || '' }));
-    if (mode === 'wipe') { cur.style.setProperty('--bg', color || 'var(--ink)'); cur.className = 'curtain wipe'; void cur.offsetWidth; cur.classList.add('up'); setTimeout(() => { location.href = href; }, 720); return; }
+    if (mode === 'wipe') {   // a sheet of the room's colour rises from the bottom
+      cur.style.setProperty('--bg', color || 'var(--ink)'); cur.className = 'curtain wipe'; cur.innerHTML = '<i class="wp"></i>';
+      cur.firstChild.animate([{ transform: 'translateY(100%)' }, { transform: 'translateY(0)' }], { duration: 700, easing: 'cubic-bezier(.65,0,.35,1)', fill: 'forwards' })
+        .onfinish = () => { location.href = href; };
+      return;
+    }
     if (shapes) { lay(color); cur.className = 'curtain'; void cur.offsetWidth; cur.classList.add('drop'); setTimeout(() => { location.href = href; }, 820); }
     else { cur.style.setProperty('--bg', color || 'var(--ink)'); cur.className = 'curtain plain'; void cur.offsetWidth; cur.classList.add('on'); setTimeout(() => { location.href = href; }, 420); }
   };

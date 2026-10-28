@@ -45,7 +45,7 @@
       d.href = 'room.html?r=' + r.no; d.setAttribute('aria-label', `Room ${r.no} — ${r.en}, ${r.ko}`);
       d.innerHTML = `<div class="cavity"></div><img class="cover" src="${r.pages[0].src}?v=3" alt="" loading="lazy">
         <div class="front" style="--h:${r.accent}"><span class="handle"></span><span class="no">${r.no}<em>${r.en}</em></span><span class="t">${r.en}</span></div>`;
-      d.addEventListener('click', e => { e.preventDefault(); fly(d, r); });
+      d.addEventListener('click', e => { e.preventDefault(); d.classList.add('open', 'quick'); go('room.html?r=' + r.no, r.accent, 'wipe'); });
     } else {
       d.innerHTML = `<div class="cavity"></div><div class="front"><span class="handle"></span></div>`;
       d.setAttribute('aria-hidden', 'true');
@@ -55,19 +55,7 @@
   }
   new IntersectionObserver((es, o) => es.forEach(e => { if (e.isIntersecting) { cab.classList.add('in'); o.disconnect(); } }), { threshold: .15 }).observe(cab);
 
-  // opening a drawer: the cover lifts out and grows to fill the screen, then the room opens
-  function fly(d, r) {
-    d.classList.add('open', 'quick');
-    const img = d.querySelector('.cover');
-    setTimeout(() => {
-      const b = img.getBoundingClientRect(); const f = img.cloneNode(); f.className = 'flying';
-      Object.assign(f.style, { left: b.left + 'px', top: b.top + 'px', width: b.width + 'px', height: b.height + 'px', transform: 'none' });
-      document.body.appendChild(f); void f.offsetWidth;
-      const W = Math.min(innerWidth * .8, 1100), H = W * 9 / 16;
-      Object.assign(f.style, { left: (innerWidth - W) / 2 + 'px', top: (innerHeight - H) / 2 + 'px', width: W + 'px', height: H + 'px', transform: 'none' });
-      setTimeout(() => go('room.html?r=' + r.no, r.dark ? '#1C1428' : r.paper), 620);
-    }, 520);
-  }
+
 
   // 3 · smooth anchor scroll with a short delay so the button press reads
   // profile opens from the name; it slides in, staggered
