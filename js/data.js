@@ -884,5 +884,54 @@ window.ROOMS = [
     14
    ]
   ]
+ },
+ {
+  "no": "06",
+  "shape": "hexagon",
+  "en": "Endangered Plant",
+  "ko": "멸종위기 식물 드로잉 · 사진 아카이브",
+  "type": "Personal project · 2025",
+  "paper": "#140A26",
+  "paper2": "#22143A",
+  "ink": "#F6EEFA",
+  "accent": "#D65BC4",
+  "ui": "#FFB8F0",
+  "dark": true,
+  "lead": "직접 그린 멸종위기 식물 드로잉과 꽃 사진을 모아 둔 개인 아카이브예요. 처음 만든 UI 작업으로, 웹과 모바일 두 버전을 프로토타입으로 연결했어요.",
+  "screens": [
+   "Home",
+   "About me",
+   "Drawing works",
+   "Botanical photobook"
+  ],
+  "pages": [
+   {
+    "t": "Web",
+    "src": "assets/works/06/web.jpg",
+    "r": 0.6222
+   },
+   {
+    "t": "Mobile",
+    "src": "assets/works/06/mobile.jpg",
+    "r": 2.1683
+   }
+  ],
+  "try": {
+   "web": {
+    "embed": "https://embed.figma.com/proto/qpFcT2NNBVCBJv5lyheKMr/%EC%9D%B4%EC%84%9C%EC%9D%80_%EC%9D%B8%ED%84%B0%ED%8E%98%EC%9D%B4%EC%8A%A4?node-id=20-498&starting-point-node-id=20%3A498&page-id=0%3A1&scaling=contain&content-scaling=fixed&embed-host=share&hide-ui=1&hotspot-hints=0&footer=false&theme=dark",
+    "open": "https://www.figma.com/proto/qpFcT2NNBVCBJv5lyheKMr/%EC%9D%B4%EC%84%9C%EC%9D%80_%EC%9D%B8%ED%84%B0%ED%8E%98%EC%9D%B4%EC%8A%A4?node-id=20-498&starting-point-node-id=20%3A498&page-id=0%3A1&scaling=contain&content-scaling=fixed&hide-ui=1",
+    "poster": "assets/works/06/web.jpg",
+    "ratio": "1366/850"
+   },
+   "mobile": {
+    "embed": "https://embed.figma.com/proto/qpFcT2NNBVCBJv5lyheKMr/%EC%9D%B4%EC%84%9C%EC%9D%80_%EC%9D%B8%ED%84%B0%ED%8E%98%EC%9D%B4%EC%8A%A4?node-id=36-1242&starting-point-node-id=36%3A1242&page-id=0%3A1&scaling=contain&content-scaling=fixed&embed-host=share&hide-ui=1&hotspot-hints=0&footer=false&theme=dark",
+    "open": "https://www.figma.com/proto/qpFcT2NNBVCBJv5lyheKMr/%EC%9D%B4%EC%84%9C%EC%9D%80_%EC%9D%B8%ED%84%B0%ED%8E%98%EC%9D%B4%EC%8A%A4?node-id=36-1242&starting-point-node-id=36%3A1242&page-id=0%3A1&scaling=contain&content-scaling=fixed&hide-ui=1",
+    "poster": "assets/works/06/mobile.jpg",
+    "ratio": "393/852"
+   }
+  }
  }
 ];
+
+// rooms that run a live prototype open try.html instead of the book
+window.roomHref = (r, v) => (r.try ? 'try.html?r=' : 'room.html?r=') + r.no + (v ? '&v=' + v : '');

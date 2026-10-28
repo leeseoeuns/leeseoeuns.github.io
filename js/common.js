@@ -20,19 +20,37 @@
     });
   }
 
-  // curtain transitions between pages
+  // page change: shapes drop in, ta-ta-tak, cover the screen, then tumble away on the next page
   const cur = document.createElement('div'); cur.className = 'curtain'; document.body.appendChild(cur);
-  if (store.get('curtain') === '1') { cur.classList.add('out'); store.set('curtain', '0'); }
+  const KINDS = ['square', 'circle', 'hexagon', 'pentagon', 'triangle', 'diamond', 'star', 'octagon'];
+  const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function lay(color) {
+    const P = window.SHAPE_COLORS || {}, cols = Object.keys(P).length ? ['ink', 'blue', 'pink', 'green', 'orange', 'lime', 'navy', 'lav'].map(k => P[k]).filter(Boolean) : ['#111'];
+    const n = innerWidth < 700 ? 4 : 7, cell = innerWidth / n, rows = Math.ceil(innerHeight / cell) + 1;
+    cur.style.setProperty('--cell', cell + 'px'); cur.style.setProperty('--bg', color || 'var(--ink)');
+    let h = '<i class="cur-bg"></i>', k = 0;
+    for (let r = 0; r < rows; r++) for (let c = 0; c < n; c++) {
+      const kind = KINDS[(r * 3 + c * 5 + (r * c) % 3) % KINDS.length], col = cols[(r * 2 + c * 3) % cols.length];
+      h += `<span style="left:${c * cell}px;top:${r * cell}px;--d:${c * 45 + (rows - 1 - r) * 28}ms;--x:${(Math.random() - .5) * 40}px;--r:${(Math.random() - .5) * 50}deg;--f:${Math.random() * 220}ms">${window.SHAPE_SVG ? SHAPE_SVG(kind, col) : ''}</span>`; k++;
+    }
+    cur.innerHTML = h;
+  }
+  if (store.get('curtain') && store.get('curtain') !== '0' && !calm) {   // arrived through a curtain: start covered, then let the shapes fall
+    const color = store.get('curtain'); store.set('curtain', '0');
+    cur.classList.add('cover'); cur.style.setProperty('--bg', color === '1' ? 'var(--ink)' : color);
+    const run = () => { lay(color === '1' ? '' : color); requestAnimationFrame(() => requestAnimationFrame(() => { cur.classList.add('fall'); setTimeout(() => { cur.className = 'curtain'; cur.innerHTML = ''; }, 1100); })); };
+    if (window.SHAPE_SVG) run(); else addEventListener('DOMContentLoaded', run);
+  }
   window.go = function (href, color) {
-    if (color) cur.style.background = color;
-    cur.classList.remove('out'); void cur.offsetWidth; cur.classList.add('in');
-    store.set('curtain', '1');
-    setTimeout(() => { location.href = href; }, 680);
+    if (calm) { location.href = href; return; }
+    lay(color); cur.className = 'curtain'; void cur.offsetWidth; cur.classList.add('drop');
+    store.set('curtain', color || '1');
+    setTimeout(() => { location.href = href; }, 820);
   };
   document.addEventListener('click', e => {
     const a = e.target.closest('a[data-go]'); if (!a || e.metaKey || e.ctrlKey) return;
     e.preventDefault(); const href = a.getAttribute('href');
     setTimeout(() => go(href, a.dataset.color), 110); // a breath before leaving
   });
-  addEventListener('pageshow', e => { if (e.persisted) { cur.classList.remove('in'); } });
+  addEventListener('pageshow', e => { if (e.persisted) { cur.className = 'curtain'; cur.innerHTML = ''; } });
 })();

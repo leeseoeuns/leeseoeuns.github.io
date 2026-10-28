@@ -22,17 +22,26 @@
     store.set('seen', '1');
   } else { setTimeout(open, 60); }
 
-  // 2 · cabinet: 6 × 4 drawers, five of them hold work
+  // 2 · cabinet: 6 × 4 drawers, six of them hold work
   const cab = document.getElementById('cabinet');
-  const live = { 0: 0, 1: 1, 2: 2, 3: 3, 4: 4 };
+  const live = { 0: 0, 1: 1, 2: 2, 3: 3, 4: 4, 5: 5 };
   // 6 × 4: no shape twice in a row, none repeated straight down a column (same grid as Figma)
   const GRID = [['square','circle','triangle','pentagon','ring','hexagon'],['ring','diamond','circle','star','hexagon','square'],['hexagon','square','diamond','ring','pentagon','star'],['star','ring','hexagon','square','triangle','diamond']].flat();
   for (let i = 0; i < 24; i++) {
     const r = ROOMS[live[i]];
-    const d = document.createElement(r ? 'a' : 'div');
+    const d = document.createElement(r && !r.try ? 'a' : 'div');
     d.className = 'drawer ' + (r ? 'live' : 'empty'); d.style.setProperty('--i', i);
     d.dataset.s = r ? r.shape : GRID[i];
-    if (r) {
+    if (r && r.try) {   // a wardrobe: two doors part in the middle onto Web | Mobile
+      d.classList.add('wardrobe'); d.tabIndex = 0; d.setAttribute('aria-label', `Room ${r.no} — ${r.en}, ${r.ko}`);
+      d.innerHTML = `<div class="inside">${['web', 'mobile'].map(v => `<a class="half ${v}" href="${roomHref(r, v)}" aria-label="${r.en} — ${v}"><span class="pic"><img src="${r.try[v].poster}" alt="" loading="lazy"></span><b>${v === 'web' ? 'Web' : 'Mobile'} ↗</b></a>`).join('')}<span class="cap"><b>${r.no}</b> ${r.en}</span></div>
+        <div class="doors" style="--h:${r.accent}"><div class="door l"><span class="no">${r.no}</span><span class="t">${r.en}</span><i class="knob"></i></div><div class="door r"><i class="knob"></i></div></div>`;
+      d.addEventListener('click', e => { const a = e.target.closest('.half'); e.preventDefault();
+        if (!a || !d.matches('.open, :hover')) { d.classList.add('open'); return; }   // first tap on a phone opens the doors, the second picks a side
+        go(a.getAttribute('href'), r.paper); });
+      if (matchMedia('(hover:hover)').matches) d.addEventListener('mouseleave', () => d.classList.remove('open'));
+      else document.addEventListener('click', e => { if (!d.contains(e.target)) d.classList.remove('open'); });
+    } else if (r) {
       d.href = 'room.html?r=' + r.no; d.setAttribute('aria-label', `Room ${r.no} — ${r.en}, ${r.ko}`);
       d.innerHTML = `<div class="cavity"></div><img class="cover" src="${r.pages[0].src}?v=3" alt="" loading="lazy">
         <div class="front" style="--h:${r.accent}"><span class="handle"></span><span class="no">${r.no}<em>${r.en}</em></span><span class="t">${r.en}</span></div>`;

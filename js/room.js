@@ -2,6 +2,7 @@
   const q = new URLSearchParams(location.search).get('r') || '01';
   const idx = Math.max(0, ROOMS.findIndex(r => r.no === q));
   const R = ROOMS[idx], P = R.pages, N = P.length, next = ROOMS[(idx + 1) % ROOMS.length];
+  if (R.try) { location.replace(roomHref(R)); return; }
   const $ = id => document.getElementById(id), pad = n => String(n).padStart(2, '0');
   const root = document.documentElement;
   root.style.setProperty('--accent', R.ui || R.accent);
@@ -32,7 +33,7 @@
     chapters.appendChild(li); partEls.push(li);
   });
   $('endTxt').textContent = `— End of Room ${R.no} —`;
-  const nx = $('nextRoom'); nx.href = 'room.html?r=' + next.no; nx.dataset.color = next.dark ? '#1C1428' : next.paper;
+  const nx = $('nextRoom'); nx.href = roomHref(next); nx.dataset.color = next.dark ? '#1C1428' : next.paper;
   nx.innerHTML = `<span class="tile">${SHAPE_SVG(next.shape, next.accent)}</span><span class="lbl">Next → ${next.en}</span>`; nx.setAttribute('aria-label', 'Next room: ' + next.en);
 
   const seen = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('seen'); seen.unobserve(e.target); } }), { rootMargin: '0px 0px -8% 0px' });
@@ -136,7 +137,7 @@
   function stopScreen() { cancelAnimationFrame(raf); paused = true; }
   $('sPlay').onclick = () => { paused = !paused; $('sPlay').textContent = paused ? '▶ Play' : '❚❚ Pause'; if (!paused) run(); };
   screen.onclick = () => $('sPlay').click();
-  const fn = $('finNext'); fn.href = 'room.html?r=' + next.no; fn.textContent = `Next room → ${next.en}`; fn.dataset.color = '#000';
+  const fn = $('finNext'); fn.href = roomHref(next); fn.textContent = `Next room → ${next.en}`; fn.dataset.color = '#000';
   $('finAgain').onclick = () => screening(0);
 
   addEventListener('keydown', e => {

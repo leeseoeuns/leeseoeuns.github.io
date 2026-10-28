@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="ko" class="room dark try">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Room — Lee Seoeun</title>
+<meta property="og:type" content="website">
+<meta property="og:title" content="Read the Room — Lee Seoeun">
+<meta property="og:image" content="https://leeseoeuns.github.io/assets/og.png?v=3">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Noto+Sans+KR:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='44' fill='%23504AFA'/%3E%3C/svg%3E">
+</head>
+<body>
+<aside class="side">
+  <a class="back link" href="index.html#archive" data-go data-text="← Archive"><span>← Archive</span></a>
+  <div>
+    <p class="room-no" id="roomNo"></p>
+    <h1 id="roomEn"></h1>
+    <p class="ko" id="roomKo"></p>
+  </div>
+  <p class="meta" id="roomMeta"></p>
+  <p class="try-lead kr" id="lead"></p>
+  <ol class="chapters try-screens" id="screens"></ol>
+  <div class="modebar">
+    <button class="pill" data-v="web">Web <i class="dot"></i></button>
+    <button class="pill" data-v="mobile">Mobile <i class="dot"></i></button>
+  </div>
+  <a class="try-open link" id="openFig" target="_blank" rel="noopener" data-text="Open in Figma ↗"><span>Open in Figma ↗</span></a>
+</aside>
+
+<main class="read">
+  <section class="try-stage">
+    <div class="device" id="device">
+      <img class="poster" id="poster" alt="">
+      <button class="try-play" id="play"><i></i><span id="playTxt">Play</span></button>
+      <div class="try-load" id="load"><span></span></div>
+    </div>
+    <p class="try-hint kr" id="hint">화면 속 메뉴와 버튼을 직접 눌러 보세요.</p>
+  </section>
+  <div class="end">
+    <small id="endTxt"></small>
+    <a class="next-room" id="nextRoom" data-go></a>
+  </div>
+</main>
+
+<script src="js/shapes.js"></script>
+<script src="js/common.js"></script>
+<script src="js/data.js"></script>
+<script src="js/try.js"></script>
+</body>
+</html>
