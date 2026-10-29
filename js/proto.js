@@ -3,7 +3,7 @@
    hotspot: [x, y, w, h, action, target, opts]   action: go | ovl | close | swap(change overlay)
    o: overlays {w, h, at: 'center' | 'top' | 'right', dim, out (click outside closes), clipTop, r (corner radius), hs} */
 (function () {
-  const P = 'assets/proto/', img = id => P + id.replace(':', '_') + '.jpg';
+  const P = 'assets/proto/', img = id => P + id.replace(':', '_') + '.jpg?v=2';
   const S = {}, O = {};
   // ---------- WEB ----------
   const NAV = [[367, 75, 125, 30, 'go', '20:1169'], [572, 75, 215, 30, 'go', '9:373'], [867, 75, 285, 30, 'go', '25:1631']];
