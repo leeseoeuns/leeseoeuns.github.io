@@ -798,3 +798,12 @@ html.arr-w::after{content:"";position:fixed;inset:0;z-index:899;background:var(-
 .reader.open .rd-pages::before{opacity:1}
 .rd-p.l{box-shadow:inset -26px 0 30px -22px rgba(0,0,0,.4),-1px 2px 0 #D9D2C4,-2px 4px 0 #F7F4EE,-3px 6px 0 #D9D2C4,-4px 8px 0 #F7F4EE,-5px 10px 0 #D9D2C4,-6px 12px 0 #F7F4EE,-7px 13px 0 #CFC7B7}
 .rd-p.r{box-shadow:inset 26px 0 30px -22px rgba(0,0,0,.4),1px 2px 0 #D9D2C4,2px 4px 0 #F7F4EE,3px 6px 0 #D9D2C4,4px 8px 0 #F7F4EE,5px 10px 0 #D9D2C4,6px 12px 0 #F7F4EE,7px 13px 0 #CFC7B7}
+/* reader, once open: just the work, big — no cover board, no page edges, a faint fold only */
+.reader.open .rd-pages::before{opacity:0}
+.reader.open .rd-p.l{box-shadow:inset -14px 0 18px -14px rgba(0,0,0,.22)}
+.reader.open .rd-p.r{box-shadow:inset 14px 0 18px -14px rgba(0,0,0,.22)}
+.reader.single.open .rd-p.r{box-shadow:none}
+.reader.open .rd-pages{filter:drop-shadow(0 20px 40px rgba(0,0,0,.3))}
+.reader.in{background:rgba(17,17,17,.9)}
+.rd-x{top:20px;z-index:2}
+.reader{gap:14px}

@@ -140,7 +140,7 @@ window.IMG_R = {"assets/others/graphic/01.jpg": 1.4111, "assets/others/graphic/b
   const page = it => !it ? '' : it.title ? `<div class="rd-tp"><span class="no">${String(it.no).padStart(2, '0')}</span><i>${SHAPE_SVG(KIND[it.title.kind][0], KIND[it.title.kind][1])}</i><b class="kr">${it.title.info[0]}</b><span>${it.title.info[1]}</span></div>` : it.video ? (ytId(it.video) ? `<iframe class="${/shorts/.test(it.video) ? 'tall' : ''}" src="https://www.youtube.com/embed/${ytId(it.video)}?rel=0&playsinline=1" allow="autoplay; fullscreen; encrypted-media" allowfullscreen></iframe>` : `<video src="${it.video}" controls playsinline></video>`) : `<img src="${it.img}" alt="">`;
   function size() {
     per = innerWidth < 760 ? 1 : 2;
-    const H = Math.min(innerHeight * .74, 660), P = Math.min(per === 2 ? (innerWidth * .86) / 2 : innerWidth * .84, H / 1.3);
+    const H = Math.min(innerHeight - 150, 900), P = Math.min(per === 2 ? (innerWidth * .94) / 2 : innerWidth * .92, H / (per === 2 ? 1.22 : 1.3));   // big: the work is the point
     rb.style.setProperty('--P', P + 'px'); rb.style.setProperty('--H', H + 'px'); RD.classList.toggle('single', per === 1);
   }
   function fill() {
