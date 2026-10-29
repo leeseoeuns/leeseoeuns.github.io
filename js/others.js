@@ -30,53 +30,68 @@ window.IMG_R = {"assets/others/graphic/01.jpg": 1.4111, "assets/others/graphic/b
   const hasImg = w => w.images && w.images.length;
   const tint = (w, op) => `color-mix(in srgb, ${KIND[w.kind][1]} ${op}%, var(--paper))`;
 
-  // hover preview: several images in a grid whose cells match the images' shape (little cropping)
-  const SPAN = { big: [2, 2], tall: [1, 2], wide: [2, 1] }, ROW = 1.1;   // row height = 1.1 × column width
-  const LAY = [ // name, cell shapes as multiples of the tile ratio
-    ['q4', [1, 1, 1, 1]], ['l3', [2, 1, 1]],   // at most 4 images per preview
-    ['c4', [4, 4, 4, 4]], ['c3', [3, 3, 3]], ['c2', [2, 2]], ['r3', [1 / 3, 1 / 3, 1 / 3]], ['r2', [.5, .5]]];
-  function layout(w) {
-    if (!hasImg(w) || w.images.length < 2) return null;
-    const [c, r] = SPAN[w.s] || [1, 1], cr = ROW * r / c;
-    let best = null;
-    for (const [name, cells] of LAY) {
-      if (w.images.length < cells.length) continue;
-      const used = new Set(), pick = [];
-      let err = 0, worst = 0;
-      for (const m of cells) {
-        let bi = -1, be = 9;
-        w.images.forEach((src, j) => { if (used.has(j)) return; const e = Math.abs(Math.log((IMG_R[src] || 1) / (m * cr))); if (e < be - .02) { be = e; bi = j; } });
-        used.add(bi); pick.push(w.images[bi]); err += be; worst = Math.max(worst, be);
-      }
-      const score = err / cells.length - .035 * Math.min(cells.length, 6);
-      if (worst < .42 && (!best || score < best.score)) best = { name, imgs: pick, score };
-    }
-    return best;
-  }
-
-  OTHERS.forEach((w, i) => {
-    const el = document.createElement('figure'); el.className = 'g-item' + (w.s ? ' s-' + w.s : ''); el.tabIndex = 0; el.style.setProperty('--i', i);
-    const L = layout(w);
-    const yt = w.video && ytId(w.video);
-    const main = !hasImg(w) && w.poster ? `<img src="${w.poster}" alt="" loading="lazy" style="aspect-ratio:1/${w.r};object-fit:cover">` : !hasImg(w) && yt ? `<img src="https://i.ytimg.com/vi/${yt}/hqdefault.jpg" alt="" loading="lazy" onerror="this.style.background='${tint(w, 16)}';this.removeAttribute('src')" style="aspect-ratio:1/${w.r};object-fit:cover">` : hasImg(w) ? `<img src="${w.images[0]}" alt="${w.info ? w.info[0] : ''}" loading="lazy">` : `<div class="ph" style="aspect-ratio:1/${w.r};background:${tint(w, 16)}"></div>`;
-    const prev = L ? `<div class="g-prev ${L.name}">` + L.imgs.map(src => `<span><img src="${src}" alt="" loading="lazy"></span>`).join('') + '</div>' : '';
-    if (L) el.classList.add('has-prev');
-    // motion: a muted loop plays once the cover lifts
-    const vid = w.video && !yt && /\.mp4$/.test(w.video) ? `<video class="g-vid" src="${w.video}" muted loop playsinline preload="none"></video>` : '';
-    const play = (w.kind === 'motion' || (w.video && !hasImg(w))) ? '<i class="g-play"></i>' : '';
-    const info = w.info ? `<span class="g-info" tabindex="0" aria-label="${w.info[0]}">${SHAPE_SVG(KIND[w.kind][0], KIND[w.kind][1])}<span class="g-tip"><b>${w.info[0]}</b>${w.info[1] || ''}</span></span>` : '';
-    // closed state: a colour block with the category shape covers the work, like a drawer front
-    const cover = `<div class="g-cover" style="background:${tint(w, 18)}"><span class="g-shape">${SHAPE_SVG(KIND[w.kind][0], KIND[w.kind][1])}</span></div>`;
-    el.innerHTML = main + prev + vid + play + cover + info;
-    const v = el.querySelector('.g-vid'); let vt;
-    if (v) { el.addEventListener('mouseenter', () => { vt = setTimeout(() => { v.currentTime = 0; v.play().catch(() => {}); el.classList.add('playing'); }, 3000); });   // plays only after a 3s hover
-      el.addEventListener('mouseleave', () => { clearTimeout(vt); v.pause(); el.classList.remove('playing'); }); }
-    el.addEventListener('click', e => { if (e.target.closest('.g-info')) return; setTimeout(() => open(i), 90); });
-    el.addEventListener('pointerenter', () => preload(w), { once: true });   // fetch the full set while hovering, so the viewer opens instantly
-    el.addEventListener('keydown', e => { if (e.key === 'Enter') open(i); });
-    g.appendChild(el);
+  // ---------- bookshelf: every work is a book; hover pulls it out and its cover turns toward you ----------
+  const BW = { package: 96, surface: 62, graphic: 76, motion: 84, textile: 70 };      // spine width by category
+  const BH = [340, 316, 300, 332, 346, 310, 324, 296, 314, 340, 328, 304];          // spine heights (repeat)
+  const SHADE = [0, 14, 0, 22, 8, 0, 18, 0, 10, 0, 20, 6];                          // mix a little paper in so neighbours differ
+  const ink = w => w.kind === 'textile' ? '#111111' : '#FFFFFF';
+  const coverSrc = w => hasImg(w) ? w.images[0] : w.poster || '';
+  const coverR = w => IMG_R[coverSrc(w)] || w.r || 1.3;
+  const head = document.createElement('header'); head.className = 'sh-head';
+  head.innerHTML = '<h1>Others</h1><p class="kr">책등을 골라 보세요. 꺼내면 표지가 보여요.</p>';
+  const shelf = document.createElement('div'); shelf.className = 'shelf';
+  const pull = document.createElement('div'); pull.className = 'pull'; pull.setAttribute('aria-hidden', 'true');
+  pull.innerHTML = '<div class="cv"><img alt=""><video muted loop playsinline preload="none"></video></div><div class="cap"><b></b><span></span></div>';
+  g.append(head, shelf, pull);
+  const books = OTHERS.map((w, i) => {
+    const b = document.createElement('button'); b.className = 'bk'; b.type = 'button';
+    b.style.setProperty('--c', `color-mix(in srgb, ${KIND[w.kind][1]} ${100 - SHADE[i % SHADE.length]}%, #F3F1EC)`); b.style.color = ink(w);
+    b.dataset.w = BW[w.kind]; b.dataset.h = BH[i % BH.length];
+    b.setAttribute('aria-label', w.info ? w.info.join(' — ') : 'work ' + (i + 1));
+    b.innerHTML = `<span class="no">${String(i + 1).padStart(2, '0')}</span><span class="tt kr">${w.info ? w.info[0] : ''}</span><span class="sh">${SHAPE_SVG(KIND[w.kind][0], ink(w))}</span>`;
+    b.addEventListener('click', () => open(i));
+    if (matchMedia('(hover:hover)').matches) { b.addEventListener('pointerenter', () => { preload(w); show(i, b); }); b.addEventListener('pointerleave', hide); b.addEventListener('focus', () => show(i, b)); b.addEventListener('blur', hide); }
+    return b;
   });
-  g.querySelectorAll('.g-item').forEach((el, k) => setTimeout(() => el.classList.add('in'), 120 + k * 70));
+  // fill the shelves: as many books per row as fit (max 10), a category shape as the bookend
+  const ENDS = [['square', C.ink], ['quarter', C.lav], ['circle', C.blue], ['triangle', C.pink]];
+  function build() {
+    const wide = innerWidth > 900, s = wide ? 1 : .72, gap = wide ? 8 : 5, room = shelf.clientWidth - (wide ? 160 : 70);
+    shelf.innerHTML = ''; let row = null, used = 0, n = 0, r = 0;
+    const fit = Math.max(3, Math.min(10, Math.floor(room / ((70 * s) + gap)))), per = wide ? Math.min(fit, Math.max(8, Math.ceil(books.length / Math.ceil(books.length / fit)))) : Math.ceil(books.length / Math.ceil(books.length / fit));   // 8–10 books a shelf on desktop
+    const newRow = () => { if (row) end(); row = document.createElement('div'); row.className = 'shelf-row'; shelf.appendChild(row); used = 0; n = 0; };
+    const end = () => { const e = document.createElement('span'); const [k, c] = ENDS[r++ % ENDS.length]; e.className = 'bookend ' + k; e.innerHTML = SHAPE_SVG(k, c); row.appendChild(e); };
+    books.forEach(b => {
+      const w = +b.dataset.w * s, h = +b.dataset.h * s;
+      if (!row || used + w > room || n >= per) newRow();
+      b.style.width = w + 'px'; b.style.height = h + 'px'; row.appendChild(b); used += w + gap; n++;
+      const tt = b.querySelector('.tt'); tt.style.fontSize = ''; const max = h - (wide ? 104 : 78);
+      for (let f = wide ? 13 : 11; tt.scrollHeight > max && f > 8; f--) tt.style.fontSize = f - 1 + 'px';
+    });
+    end();
+  }
+  build(); let rt; addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(build, 120); });
+  requestAnimationFrame(() => g.classList.add('in'));
+
+  // the pulled-out cover
+  const pImg = pull.querySelector('img'), pVid = pull.querySelector('video'); let vt;
+  function show(i, b) {
+    const w = OTHERS[i], src = coverSrc(w);
+    books.forEach(x => x.classList.toggle('on', x === b));
+    pull.style.setProperty('--c', b.style.getPropertyValue('--c'));
+    const cw = innerWidth > 900 ? 200 : 150, ch = Math.min(cw * coverR(w), cw * 1.45);
+    pImg.src = src; pImg.style.height = ch + 'px'; pImg.style.width = cw + 'px';
+    pVid.removeAttribute('src'); pVid.load(); pull.classList.remove('playing'); clearTimeout(vt);
+    if (w.video && /\.mp4$/.test(w.video)) vt = setTimeout(() => { pVid.src = w.video; pVid.play().catch(() => {}); pull.classList.add('playing'); }, 3000);   // motion plays after a 3s hover
+    pull.querySelector('b').textContent = w.info ? w.info[0] : ''; pull.querySelector('.cap span').textContent = w.info ? w.info[1] : '';
+    const gr = g.getBoundingClientRect(), br = b.getBoundingClientRect(), W = cw + 14;
+    let x = br.right - gr.left - 6, flip = false;
+    if (x + W > gr.width - 10) { x = br.left - gr.left - W + 6; flip = true; }
+    const y = br.top - gr.top - 36 + br.height * .18 - ch * .35;       // top edge relative to the lifted book
+    pull.style.left = x + 'px'; pull.style.top = Math.max(y, 90) + 'px';
+    pull.classList.toggle('flip', flip); pull.classList.add('show');
+  }
+  function hide() { books.forEach(x => x.classList.remove('on')); pull.classList.remove('show', 'playing'); clearTimeout(vt); pVid.pause(); }
 
   // viewer
   const V = $('viewer'), stage = $('vStage'), dots = $('vDots'), vinfo = $('vInfo'); let wi = 0, si = 0;
