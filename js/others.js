@@ -12,7 +12,7 @@ window.OTHERS = [
   { kind: 'graphic', info: ['균형', 'Graphic Design · Poster'], images: ['assets/others/graphic/01.jpg'], r: 1.411 },
   { kind: 'graphic', s: 'big', info: ['깃이 번지다', 'Graphic Design · 포스터 · 배너 · 리플렛 · 모션 포스터'], images: ['assets/others/graphic/b02.jpg','assets/others/graphic/b03.jpg','assets/others/graphic/b04.jpg','assets/others/graphic/b01.jpg','assets/others/graphic/b05.jpg','assets/others/graphic/b06.jpg'], video: 'https://youtube.com/shorts/wv9fSH_8VlI', r: 1.5 },
   { kind: 'motion', s: 'wide', info: ["올빼미", "Motion Graphic · 영화 인트로"], images: [], poster: 'assets/others/motion/final.jpg', video: 'assets/others/motion/final.mp4', r: .5625 },
-  { kind: 'surface', s: 'tall', info: ['넥타이 · Orange', 'Surface Design · 넥타이 디자인 · 착용 촬영'], images: ['assets/others/tie/o03.jpg','assets/others/tie/o01.jpg','assets/others/tie/o02.jpg','assets/others/tie/o04.jpg','assets/others/tie/o05.jpg','assets/others/tie/o06.jpg','assets/others/tie/o07.jpg'], r: 1.333 },
+  { kind: 'surface', col: 'orange', s: 'tall', info: ['넥타이 · Orange', 'Surface Design · 넥타이 디자인 · 착용 촬영'], images: ['assets/others/tie/o03.jpg','assets/others/tie/o01.jpg','assets/others/tie/o02.jpg','assets/others/tie/o04.jpg','assets/others/tie/o05.jpg','assets/others/tie/o06.jpg','assets/others/tie/o07.jpg'], r: 1.333 },
   { kind: 'surface', s: 'tall', info: ['넥타이 · Blue', 'Surface Design · 넥타이 디자인 · 착용 촬영'], images: ['assets/others/tie/b05.jpg','assets/others/tie/b01.jpg','assets/others/tie/b02.jpg','assets/others/tie/b03.jpg','assets/others/tie/b04.jpg','assets/others/tie/b06.jpg','assets/others/tie/b07.jpg'], r: 1.333 },
   { kind: 'textile', s: 'big', info: ['위빙', 'Textile · 손으로 엮은 작품 · 행성을 소재로'], images: ['assets/others/textile/h01.jpg','assets/others/textile/h04.jpg','assets/others/textile/h07.jpg','assets/others/textile/h02.jpg','assets/others/textile/h05.jpg','assets/others/textile/h08.jpg','assets/others/textile/h03.jpg','assets/others/textile/h06.jpg','assets/others/textile/h09.jpg'], r: 1.414 },
   { kind: 'textile', s: 'tall', info: ['말라카이트 · 피터사이트 · 호피석', 'Textile · Weaving'], images: ['assets/others/textile/w01.jpg','assets/others/textile/w02.jpg','assets/others/textile/w03.jpg','assets/others/textile/w04.jpg','assets/others/textile/w05.jpg','assets/others/textile/w06.jpg'], r: 1.333 },
@@ -24,37 +24,35 @@ window.IMG_R = {"assets/others/graphic/01.jpg": 1.4111, "assets/others/graphic/b
 
 (function () {
   const C = SHAPE_COLORS;
-  const KIND = { package: ['square', C.ink], surface: ['circle', C.blue], graphic: ['pentagon', C.green], motion: ['triangle', C.pink], textile: ['star', C.orange] };
+  const KIND = { package: ['square', C.ink], surface: ['circle', C.blue], graphic: ['pentagon', C.green], motion: ['triangle', C.pink], textile: ['star', C.sky] };
+  const colOf = w => w.col ? C[w.col] : KIND[w.kind][1];   // a work can carry its own spine colour (the orange tie)
   const g = document.getElementById('gallery'), $ = id => document.getElementById(id);
   const ytId = u => { const m = (u || '').match(/(?:youtu\.be\/|v=|shorts\/|embed\/)([\w-]{11})/); return m && m[1]; };
   const hasImg = w => w.images && w.images.length;
-  const tint = (w, op) => `color-mix(in srgb, ${KIND[w.kind][1]} ${op}%, var(--paper))`;
+  const tint = (w, op) => `color-mix(in srgb, ${colOf(w)} ${op}%, var(--paper))`;
 
   // ---------- bookshelf: every work is a book; hover pulls it out and its cover turns toward you ----------
   const BW = { package: 96, surface: 62, graphic: 76, motion: 84, textile: 70 };      // spine width by category
   const BH = [340, 316, 300, 332, 346, 310, 324, 296, 314, 340, 328, 304];          // spine heights (repeat)
   const SHADE = [0, 14, 0, 22, 8, 0, 18, 0, 10, 0, 20, 6];                          // mix a little paper in so neighbours differ
-  const ink = w => w.kind === 'textile' ? '#111111' : '#FFFFFF';
+  const ink = w => (w.kind === 'textile' || w.col === 'orange') ? '#111111' : '#FFFFFF';
   const coverSrc = w => hasImg(w) ? w.images[0] : w.poster || '';
   const coverR = w => IMG_R[coverSrc(w)] || w.r || 1.3;
   const head = document.createElement('header'); head.className = 'sh-head';
-  head.innerHTML = '<h1>Others</h1><p class="kr">책등을 골라 보세요. 꺼내면 표지가 보여요.</p>';
+  head.innerHTML = '<h1>Others</h1><p class="kr">무슨 책을 읽으실 건가요?</p>';
   const shelf = document.createElement('div'); shelf.className = 'shelf';
   const pull = document.createElement('div'); pull.className = 'pull'; pull.setAttribute('aria-hidden', 'true');
   // an open book: the front cover swings open to the left (its inside = page 1), the right page = page 2
   pull.innerHTML = '<div class="hb"><div class="hb-front"><img alt=""><video muted loop playsinline preload="none"></video><div class="band"><span class="ln"></span><b class="kr"></b><i></i></div></div><div class="hb-edge"></div></div>';
   g.append(head, shelf, pull);
-  // shelf order: never two books of the same category side by side (so they don't read as one collection)
-  const ORDER = (() => { const left = OTHERS.map((w, i) => i), out = [];
-    while (left.length) { const prev = out.length ? OTHERS[out[out.length - 1]].kind : null;
-      const cnt = k => left.filter(j => OTHERS[j].kind === k).length;
-      let pick = left.filter(j => OTHERS[j].kind !== prev).sort((a, b) => cnt(OTHERS[b].kind) - cnt(OTHERS[a].kind) || a - b)[0];
-      if (pick === undefined) pick = left[0]; out.push(pick); left.splice(left.indexOf(pick), 1); }
-    return out; })();
+  // shelf order (set by hand): no two same-colour spines side by side, blue never next to sky,
+  // and the two ties stand together as a series (Orange → Blue). Indices point into OTHERS.
+  const ORDER = [1, 4, 9, 6, 2, 0, 7, 8, 5, 10, 11, 3].filter(i => OTHERS[i]);
+  OTHERS.forEach((w, i) => ORDER.includes(i) || ORDER.push(i));   // a newly added work goes to the end
   const NO = {}; ORDER.forEach((i, k) => NO[i] = k + 1);
   const books = ORDER.map(i => [OTHERS[i], i]).map(([w, i]) => {
     const b = document.createElement('button'); b.className = 'bk'; b.type = 'button';
-    b.style.setProperty('--c', `color-mix(in srgb, ${KIND[w.kind][1]} ${100 - SHADE[(NO[i] - 1) % SHADE.length]}%, #F3F1EC)`); b.style.color = ink(w);
+    b.style.setProperty('--c', `color-mix(in srgb, ${colOf(w)} ${w.col ? 100 : 100 - SHADE[(NO[i] - 1) % SHADE.length]}%, #F3F1EC)`); b.style.color = ink(w);
     b.dataset.w = BW[w.kind]; b.dataset.h = BH[(NO[i] - 1) % BH.length];
     b.setAttribute('aria-label', w.info ? w.info.join(' — ') : 'work ' + (i + 1));
     b.innerHTML = `<span class="no">${String(NO[i]).padStart(2, '0')}</span><span class="tt kr">${w.info ? w.info[0] : ''}</span><span class="sh">${SHAPE_SVG(KIND[w.kind][0], ink(w))}</span>`;
@@ -74,17 +72,18 @@ window.IMG_R = {"assets/others/graphic/01.jpg": 1.4111, "assets/others/graphic/b
       const w = +b.dataset.w * s, h = +b.dataset.h * s;
       if (!row || used + w > room || n >= per) newRow();
       b.style.width = w + 'px'; b.style.height = h + 'px'; row.appendChild(b); used += w + gap; n++;
-      const tt = b.querySelector('.tt'); tt.style.fontSize = ''; const max = h - (wide ? 104 : 78);
+      const tt = b.querySelector('.tt'), sh = b.querySelector('.sh'); tt.style.fontSize = ''; const max = sh.offsetTop - tt.offsetTop - 8;   // title must end above the shape
       for (let f = wide ? 13 : 11; tt.scrollHeight > max && f > 8; f--) tt.style.fontSize = f - 1 + 'px';
     });
     end();
   }
-  build(); let rt; addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(build, 120); });
+  build(); if (document.fonts) document.fonts.ready.then(build);   // re-fit spine titles once the web font has loaded
+  let rt; addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(build, 120); });
   requestAnimationFrame(() => g.classList.add('in'));
 
   // the pulled book, standing: its front cover is the work, with a white belly band carrying the title
   const pImg = pull.querySelector('img'), pVid = pull.querySelector('video'); let vt;
-  const fillBand = (el, w) => { el.querySelector('.ln').textContent = w.info ? w.info[1] : ''; el.querySelector('b').textContent = w.info ? w.info[0] : ''; el.querySelector('i').innerHTML = SHAPE_SVG(KIND[w.kind][0], KIND[w.kind][1]); };
+  const fillBand = (el, w) => { el.querySelector('.ln').textContent = w.info ? w.info[1] : ''; el.querySelector('b').textContent = w.info ? w.info[0] : ''; el.querySelector('i').innerHTML = SHAPE_SVG(KIND[w.kind][0], colOf(w)); };
   function show(i, b) {
     const w = OTHERS[i], src = coverSrc(w);
     books.forEach(x => x.classList.toggle('on', x === b));
@@ -118,7 +117,7 @@ window.IMG_R = {"assets/others/graphic/01.jpg": 1.4111, "assets/others/graphic/b
     stage.classList.remove('pop'); void stage.offsetWidth; stage.classList.add('pop');
     dots.innerHTML = S.length > 1 ? S.map((_, k) => `<button class="${k === si ? 'on' : ''}" aria-label="${k + 1}"></button>`).join('') : '';
     dots.querySelectorAll('button').forEach((b, k) => b.onclick = () => { si = k; render(); });
-    vinfo.innerHTML = w.info ? `<span class="g-info show">${SHAPE_SVG(KIND[w.kind][0], KIND[w.kind][1])}<span class="g-tip"><b>${w.info[0]}</b>${w.info[1] || ''}</span></span>` : '';
+    vinfo.innerHTML = w.info ? `<span class="g-info show">${SHAPE_SVG(KIND[w.kind][0], colOf(w))}<span class="g-tip"><b>${w.info[0]}</b>${w.info[1] || ''}</span></span>` : '';
     $('vPrev').style.visibility = $('vNext').style.visibility = S.length > 1 ? 'visible' : 'hidden';
   }
   const step = d => { const S = slides(OTHERS[wi]); si = (si + d + S.length) % S.length; render(); };
@@ -137,7 +136,7 @@ window.IMG_R = {"assets/others/graphic/01.jpg": 1.4111, "assets/others/graphic/b
   document.body.appendChild(RD);
   const rb = RD.querySelector('.rd-book'), lid = RD.querySelector('.rd-lid'), leaf = RD.querySelector('.rd-leaf'), PL = RD.querySelector('.rd-p.l'), PR = RD.querySelector('.rd-p.r');
   let bk = null, items = [], sp = 0, per = 2, from = null, busy = false;
-  const page = it => !it ? '' : it.title ? `<div class="rd-tp"><span class="no">${String(it.no).padStart(2, '0')}</span><i>${SHAPE_SVG(KIND[it.title.kind][0], KIND[it.title.kind][1])}</i><b class="kr">${it.title.info[0]}</b><span>${it.title.info[1]}</span></div>` : it.video ? (ytId(it.video) ? `<iframe class="${/shorts/.test(it.video) ? 'tall' : ''}" src="https://www.youtube.com/embed/${ytId(it.video)}?rel=0&playsinline=1" allow="autoplay; fullscreen; encrypted-media" allowfullscreen></iframe>` : `<video src="${it.video}" controls playsinline></video>`) : `<img src="${it.img}" alt="">`;
+  const page = it => !it ? '' : it.title ? `<div class="rd-tp"><span class="no">${String(it.no).padStart(2, '0')}</span><i>${SHAPE_SVG(KIND[it.title.kind][0], colOf(it.title))}</i><b class="kr">${it.title.info[0]}</b><span>${it.title.info[1]}</span></div>` : it.video ? (ytId(it.video) ? `<iframe class="${/shorts/.test(it.video) ? 'tall' : ''}" src="https://www.youtube.com/embed/${ytId(it.video)}?rel=0&playsinline=1" allow="autoplay; fullscreen; encrypted-media" allowfullscreen></iframe>` : `<video src="${it.video}" controls playsinline></video>`) : `<img src="${it.img}" alt="">`;
   function size() {
     per = innerWidth < 760 ? 1 : 2;
     const H = Math.min(innerHeight - 150, 900), P = Math.min(per === 2 ? (innerWidth * .94) / 2 : innerWidth * .92, H / (per === 2 ? 1.22 : 1.3));   // big: the work is the point
