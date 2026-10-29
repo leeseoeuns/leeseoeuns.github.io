@@ -42,8 +42,7 @@ window.IMG_R = {"assets/others/graphic/01.jpg": 1.4111, "assets/others/graphic/b
   const shelf = document.createElement('div'); shelf.className = 'shelf';
   const pull = document.createElement('div'); pull.className = 'pull'; pull.setAttribute('aria-hidden', 'true');
   // an open book: the front cover swings open to the left (its inside = page 1), the right page = page 2
-  pull.innerHTML = '<div class="ob"><div class="pg r"><img alt=""><div class="tp"><i></i><b></b><span></span></div><video muted loop playsinline preload="none"></video></div>'
-    + '<div class="lid"><div class="face"><span class="ft"></span><i class="fs"></i></div><div class="back"><img alt=""></div></div></div><div class="cap"><b></b><span></span></div>';
+  pull.innerHTML = '<div class="hb"><div class="hb-front"><img alt=""><video muted loop playsinline preload="none"></video><div class="band"><span class="ln"></span><b class="kr"></b><i></i></div></div><div class="hb-edge"></div></div>';
   g.append(head, shelf, pull);
   const books = OTHERS.map((w, i) => {
     const b = document.createElement('button'); b.className = 'bk'; b.type = 'button';
@@ -75,29 +74,23 @@ window.IMG_R = {"assets/others/graphic/01.jpg": 1.4111, "assets/others/graphic/b
   build(); let rt; addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(build, 120); });
   requestAnimationFrame(() => g.classList.add('in'));
 
-  // the book, opened
-  const pR = pull.querySelector('.pg.r img'), pL = pull.querySelector('.back img'), pVid = pull.querySelector('video'); let vt;
+  // the pulled book, standing: its front cover is the work, with a white belly band carrying the title
+  const pImg = pull.querySelector('img'), pVid = pull.querySelector('video'); let vt;
+  const fillBand = (el, w) => { el.querySelector('.ln').textContent = w.info ? w.info[1] : ''; el.querySelector('b').textContent = w.info ? w.info[0] : ''; el.querySelector('i').innerHTML = SHAPE_SVG(KIND[w.kind][0], KIND[w.kind][1]); };
   function show(i, b) {
-    const w = OTHERS[i], imgs = hasImg(w) ? w.images : (w.poster ? [w.poster] : []);
+    const w = OTHERS[i], src = coverSrc(w);
     books.forEach(x => x.classList.toggle('on', x === b));
     pull.classList.remove('show'); void pull.offsetWidth;
-    pull.style.setProperty('--c', b.style.getPropertyValue('--c')); pull.style.setProperty('--ink', b.style.color);
-    const pw = innerWidth > 900 ? 168 : 128, r = Math.min(1.42, Math.max(.9, IMG_R[imgs[0]] || w.r || 1.3)), ph = Math.round(pw * r);
-    pull.style.setProperty('--pw', pw + 'px'); pull.style.setProperty('--ph', ph + 'px');
-    pL.src = imgs[0] || ''; pL.style.visibility = imgs[0] ? '' : 'hidden';
-    const second = imgs[1];
-    pR.src = second || ''; pull.classList.toggle('textpage', !second);
-    pull.querySelector('.tp b').textContent = w.info ? w.info[0] : ''; pull.querySelector('.tp span').textContent = w.info ? w.info[1] : '';
-    pull.querySelector('.tp i').innerHTML = SHAPE_SVG(KIND[w.kind][0], KIND[w.kind][1]);
-    pull.querySelector('.ft').textContent = w.info ? w.info[0] : ''; pull.querySelector('.fs').innerHTML = SHAPE_SVG(KIND[w.kind][0], b.style.color);
+    pull.style.setProperty('--c', b.style.getPropertyValue('--c'));
+    const cw = innerWidth > 900 ? 210 : 150, ch = Math.round(cw * 1.42);
+    pull.style.setProperty('--cw', cw + 'px'); pull.style.setProperty('--ch', ch + 'px');
+    pImg.src = src; fillBand(pull, w);
     pVid.removeAttribute('src'); pVid.load(); pull.classList.remove('playing'); clearTimeout(vt);
     if (w.video && /\.mp4$/.test(w.video)) vt = setTimeout(() => { pVid.src = w.video; pVid.play().catch(() => {}); pull.classList.add('playing'); }, 3000);   // motion plays after a 3s hover
-    pull.querySelector('.cap b').textContent = w.info ? w.info[0] : ''; pull.querySelector('.cap span').textContent = w.info ? w.info[1] : '';
-    const gr = g.getBoundingClientRect(), br = b.getBoundingClientRect(), W = pw * 2;
-    let x = br.right - gr.left + 14 - pw;            // closed book sits just right of the spine, then opens leftwards over it
-    x = br.right - gr.left + 14; if (x + W > gr.width - 10) x = br.left - gr.left - W - 14;
-    const y = br.top - gr.top - 36 + br.height * .5 - ph * .62;
-    pull.style.left = x + 'px'; pull.style.top = Math.max(y, 90) + 'px';
+    const gr = g.getBoundingClientRect(), br = b.getBoundingClientRect(), W = cw + 26;
+    let x = br.right - gr.left + 16, flip = false; if (x + W > gr.width - 10) { x = br.left - gr.left - W - 16; flip = true; }
+    const y = br.top - gr.top - 36 + br.height - ch;                 // stands on the same shelf line as the lifted spine
+    pull.style.left = x + 'px'; pull.style.top = Math.max(y, 90) + 'px'; pull.classList.toggle('flip', flip);
     requestAnimationFrame(() => pull.classList.add('show'));
   }
   function hide() { books.forEach(x => x.classList.remove('on')); pull.classList.remove('show', 'playing'); clearTimeout(vt); pVid.pause(); }
@@ -131,7 +124,7 @@ window.IMG_R = {"assets/others/graphic/01.jpg": 1.4111, "assets/others/graphic/b
   const RD = document.createElement('div'); RD.className = 'reader'; RD.hidden = true;
   RD.innerHTML = '<button class="rd-x" aria-label="Close">Close</button><div class="rd-book"><div class="rd-pages"><div class="rd-p l"></div><div class="rd-p r"></div></div>'
     + '<div class="rd-leaf"><div class="lf-f"></div><div class="lf-b"></div></div>'
-    + '<div class="rd-lid"><div class="face"><span class="no"></span><b class="kr"></b><span class="ln"></span><i class="fs"></i></div><div class="back"></div></div></div>'
+    + '<div class="rd-lid"><div class="face"><img alt=""><div class="band"><span class="ln"></span><b class="kr"></b><i></i></div></div><div class="back"></div></div></div>'
     + '<div class="rd-nav"><button class="rd-prev" aria-label="Previous">←</button><span class="rd-cnt"></span><button class="rd-next" aria-label="Next">→</button></div>';
   document.body.appendChild(RD);
   const rb = RD.querySelector('.rd-book'), lid = RD.querySelector('.rd-lid'), leaf = RD.querySelector('.rd-leaf'), PL = RD.querySelector('.rd-p.l'), PR = RD.querySelector('.rd-p.r');
@@ -155,8 +148,7 @@ window.IMG_R = {"assets/others/graphic/01.jpg": 1.4111, "assets/others/graphic/b
     if (innerWidth >= 760) items.unshift({ title: w, no: i + 1 });   // the first left page is a title page, like the inside of a cover
     preload(w); size();
     rb.style.setProperty('--c', b.style.getPropertyValue('--c')); rb.style.color = ''; lid.querySelector('.face').style.color = b.style.color;
-    lid.querySelector('.no').textContent = String(i + 1).padStart(2, '0'); lid.querySelector('b').textContent = w.info ? w.info[0] : ''; lid.querySelector('.ln').textContent = w.info ? w.info[1] : '';
-    lid.querySelector('.fs').innerHTML = SHAPE_SVG(KIND[w.kind][0], b.style.color);
+    lid.querySelector('.face img').src = coverSrc(w); fillBand(lid, w);
     fill(); RD.hidden = false; RD.className = 'reader' + (per === 1 ? ' single' : ''); b.classList.add('gone'); document.body.style.overflow = 'hidden';
     // 1 · the spine leaves the shelf: start the closed book on top of the spine, then fly to the centre
     const r = rb.getBoundingClientRect(), P = parseFloat(rb.style.getPropertyValue('--P')), H = parseFloat(rb.style.getPropertyValue('--H'));
