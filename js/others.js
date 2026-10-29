@@ -45,9 +45,9 @@ window.IMG_R = {"assets/others/graphic/01.jpg": 1.4111, "assets/others/graphic/b
   // an open book: the front cover swings open to the left (its inside = page 1), the right page = page 2
   pull.innerHTML = '<div class="hb"><div class="hb-front"><img alt=""><video muted loop playsinline preload="none"></video><div class="band"><span class="ln"></span><b class="kr"></b><i></i></div></div><div class="hb-edge"></div></div>';
   g.append(head, shelf, pull);
-  // shelf order (set by hand). Series stand together: the three scarves, and the two ties (Orange → Blue).
-  // Otherwise no two same-colour spines side by side, and blue never next to sky. Indices point into OTHERS.
-  const ORDER = [0, 1, 2, 3, 4, 6, 7, 8, 5, 9, 11, 10].filter(i => OTHERS[i]);
+  // shelf order (set by hand). Series stand together: the three scarves, the two ties (Orange → Blue),
+  // and the two weavings. Otherwise no two same-colour spines side by side, and blue never next to sky. Indices point into OTHERS.
+  const ORDER = [0, 1, 2, 3, 4, 6, 7, 8, 5, 11, 9, 10].filter(i => OTHERS[i]);
   OTHERS.forEach((w, i) => ORDER.includes(i) || ORDER.push(i));   // a newly added work goes to the end
   const NO = {}; ORDER.forEach((i, k) => NO[i] = k + 1);
   const books = ORDER.map(i => [OTHERS[i], i]).map(([w, i]) => {
