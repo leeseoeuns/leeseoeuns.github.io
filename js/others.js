@@ -44,12 +44,20 @@ window.IMG_R = {"assets/others/graphic/01.jpg": 1.4111, "assets/others/graphic/b
   // an open book: the front cover swings open to the left (its inside = page 1), the right page = page 2
   pull.innerHTML = '<div class="hb"><div class="hb-front"><img alt=""><video muted loop playsinline preload="none"></video><div class="band"><span class="ln"></span><b class="kr"></b><i></i></div></div><div class="hb-edge"></div></div>';
   g.append(head, shelf, pull);
-  const books = OTHERS.map((w, i) => {
+  // shelf order: never two books of the same category side by side (so they don't read as one collection)
+  const ORDER = (() => { const left = OTHERS.map((w, i) => i), out = [];
+    while (left.length) { const prev = out.length ? OTHERS[out[out.length - 1]].kind : null;
+      const cnt = k => left.filter(j => OTHERS[j].kind === k).length;
+      let pick = left.filter(j => OTHERS[j].kind !== prev).sort((a, b) => cnt(OTHERS[b].kind) - cnt(OTHERS[a].kind) || a - b)[0];
+      if (pick === undefined) pick = left[0]; out.push(pick); left.splice(left.indexOf(pick), 1); }
+    return out; })();
+  const NO = {}; ORDER.forEach((i, k) => NO[i] = k + 1);
+  const books = ORDER.map(i => [OTHERS[i], i]).map(([w, i]) => {
     const b = document.createElement('button'); b.className = 'bk'; b.type = 'button';
-    b.style.setProperty('--c', `color-mix(in srgb, ${KIND[w.kind][1]} ${100 - SHADE[i % SHADE.length]}%, #F3F1EC)`); b.style.color = ink(w);
-    b.dataset.w = BW[w.kind]; b.dataset.h = BH[i % BH.length];
+    b.style.setProperty('--c', `color-mix(in srgb, ${KIND[w.kind][1]} ${100 - SHADE[(NO[i] - 1) % SHADE.length]}%, #F3F1EC)`); b.style.color = ink(w);
+    b.dataset.w = BW[w.kind]; b.dataset.h = BH[(NO[i] - 1) % BH.length];
     b.setAttribute('aria-label', w.info ? w.info.join(' — ') : 'work ' + (i + 1));
-    b.innerHTML = `<span class="no">${String(i + 1).padStart(2, '0')}</span><span class="tt kr">${w.info ? w.info[0] : ''}</span><span class="sh">${SHAPE_SVG(KIND[w.kind][0], ink(w))}</span>`;
+    b.innerHTML = `<span class="no">${String(NO[i]).padStart(2, '0')}</span><span class="tt kr">${w.info ? w.info[0] : ''}</span><span class="sh">${SHAPE_SVG(KIND[w.kind][0], ink(w))}</span>`;
     b.addEventListener('click', () => { hide(); openBook(i, b); });
     if (matchMedia('(hover:hover)').matches) { b.addEventListener('pointerenter', () => { preload(w); show(i, b); }); b.addEventListener('pointerleave', hide); b.addEventListener('focus', () => show(i, b)); b.addEventListener('blur', hide); }
     return b;
@@ -145,7 +153,7 @@ window.IMG_R = {"assets/others/graphic/01.jpg": 1.4111, "assets/others/graphic/b
   function openBook(i, b) {
     const w = OTHERS[i]; bk = b; from = b.getBoundingClientRect(); sp = 0; busy = true;
     items = (w.images || []).map(img => ({ img })); if (w.video) items.push({ video: w.video }); if (!items.length && w.poster) items.push({ img: w.poster });
-    if (innerWidth >= 760) items.unshift({ title: w, no: i + 1 });   // the first left page is a title page, like the inside of a cover
+    if (innerWidth >= 760) items.unshift({ title: w, no: NO[i] });   // the first left page is a title page, like the inside of a cover
     preload(w); size();
     rb.style.setProperty('--c', b.style.getPropertyValue('--c')); rb.style.color = ''; lid.querySelector('.face').style.color = b.style.color;
     lid.querySelector('.face img').src = coverSrc(w); fillBand(lid, w);
