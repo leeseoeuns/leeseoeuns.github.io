@@ -41,7 +41,9 @@ window.IMG_R = {"assets/others/graphic/01.jpg": 1.4111, "assets/others/graphic/b
   head.innerHTML = '<h1>Others</h1><p class="kr">책등을 골라 보세요. 꺼내면 표지가 보여요.</p>';
   const shelf = document.createElement('div'); shelf.className = 'shelf';
   const pull = document.createElement('div'); pull.className = 'pull'; pull.setAttribute('aria-hidden', 'true');
-  pull.innerHTML = '<div class="cv"><img alt=""><video muted loop playsinline preload="none"></video></div><div class="cap"><b></b><span></span></div>';
+  // an open book: the front cover swings open to the left (its inside = page 1), the right page = page 2
+  pull.innerHTML = '<div class="ob"><div class="pg r"><img alt=""><div class="tp"><i></i><b></b><span></span></div><video muted loop playsinline preload="none"></video></div>'
+    + '<div class="lid"><div class="face"><span class="ft"></span><i class="fs"></i></div><div class="back"><img alt=""></div></div></div><div class="cap"><b></b><span></span></div>';
   g.append(head, shelf, pull);
   const books = OTHERS.map((w, i) => {
     const b = document.createElement('button'); b.className = 'bk'; b.type = 'button';
@@ -49,7 +51,7 @@ window.IMG_R = {"assets/others/graphic/01.jpg": 1.4111, "assets/others/graphic/b
     b.dataset.w = BW[w.kind]; b.dataset.h = BH[i % BH.length];
     b.setAttribute('aria-label', w.info ? w.info.join(' — ') : 'work ' + (i + 1));
     b.innerHTML = `<span class="no">${String(i + 1).padStart(2, '0')}</span><span class="tt kr">${w.info ? w.info[0] : ''}</span><span class="sh">${SHAPE_SVG(KIND[w.kind][0], ink(w))}</span>`;
-    b.addEventListener('click', () => open(i));
+    b.addEventListener('click', () => { hide(); openBook(i, b); });
     if (matchMedia('(hover:hover)').matches) { b.addEventListener('pointerenter', () => { preload(w); show(i, b); }); b.addEventListener('pointerleave', hide); b.addEventListener('focus', () => show(i, b)); b.addEventListener('blur', hide); }
     return b;
   });
@@ -73,23 +75,30 @@ window.IMG_R = {"assets/others/graphic/01.jpg": 1.4111, "assets/others/graphic/b
   build(); let rt; addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(build, 120); });
   requestAnimationFrame(() => g.classList.add('in'));
 
-  // the pulled-out cover
-  const pImg = pull.querySelector('img'), pVid = pull.querySelector('video'); let vt;
+  // the book, opened
+  const pR = pull.querySelector('.pg.r img'), pL = pull.querySelector('.back img'), pVid = pull.querySelector('video'); let vt;
   function show(i, b) {
-    const w = OTHERS[i], src = coverSrc(w);
+    const w = OTHERS[i], imgs = hasImg(w) ? w.images : (w.poster ? [w.poster] : []);
     books.forEach(x => x.classList.toggle('on', x === b));
-    pull.style.setProperty('--c', b.style.getPropertyValue('--c'));
-    const cw = innerWidth > 900 ? 200 : 150, ch = Math.min(cw * coverR(w), cw * 1.45);
-    pImg.src = src; pImg.style.height = ch + 'px'; pImg.style.width = cw + 'px';
+    pull.classList.remove('show'); void pull.offsetWidth;
+    pull.style.setProperty('--c', b.style.getPropertyValue('--c')); pull.style.setProperty('--ink', b.style.color);
+    const pw = innerWidth > 900 ? 168 : 128, r = Math.min(1.42, Math.max(.9, IMG_R[imgs[0]] || w.r || 1.3)), ph = Math.round(pw * r);
+    pull.style.setProperty('--pw', pw + 'px'); pull.style.setProperty('--ph', ph + 'px');
+    pL.src = imgs[0] || ''; pL.style.visibility = imgs[0] ? '' : 'hidden';
+    const second = imgs[1];
+    pR.src = second || ''; pull.classList.toggle('textpage', !second);
+    pull.querySelector('.tp b').textContent = w.info ? w.info[0] : ''; pull.querySelector('.tp span').textContent = w.info ? w.info[1] : '';
+    pull.querySelector('.tp i').innerHTML = SHAPE_SVG(KIND[w.kind][0], KIND[w.kind][1]);
+    pull.querySelector('.ft').textContent = w.info ? w.info[0] : ''; pull.querySelector('.fs').innerHTML = SHAPE_SVG(KIND[w.kind][0], b.style.color);
     pVid.removeAttribute('src'); pVid.load(); pull.classList.remove('playing'); clearTimeout(vt);
     if (w.video && /\.mp4$/.test(w.video)) vt = setTimeout(() => { pVid.src = w.video; pVid.play().catch(() => {}); pull.classList.add('playing'); }, 3000);   // motion plays after a 3s hover
-    pull.querySelector('b').textContent = w.info ? w.info[0] : ''; pull.querySelector('.cap span').textContent = w.info ? w.info[1] : '';
-    const gr = g.getBoundingClientRect(), br = b.getBoundingClientRect(), W = cw + 14;
-    let x = br.right - gr.left - 6, flip = false;
-    if (x + W > gr.width - 10) { x = br.left - gr.left - W + 6; flip = true; }
-    const y = br.top - gr.top - 36 + br.height * .18 - ch * .35;       // top edge relative to the lifted book
+    pull.querySelector('.cap b').textContent = w.info ? w.info[0] : ''; pull.querySelector('.cap span').textContent = w.info ? w.info[1] : '';
+    const gr = g.getBoundingClientRect(), br = b.getBoundingClientRect(), W = pw * 2;
+    let x = br.right - gr.left + 14 - pw;            // closed book sits just right of the spine, then opens leftwards over it
+    x = br.right - gr.left + 14; if (x + W > gr.width - 10) x = br.left - gr.left - W - 14;
+    const y = br.top - gr.top - 36 + br.height * .5 - ph * .62;
     pull.style.left = x + 'px'; pull.style.top = Math.max(y, 90) + 'px';
-    pull.classList.toggle('flip', flip); pull.classList.add('show');
+    requestAnimationFrame(() => pull.classList.add('show'));
   }
   function hide() { books.forEach(x => x.classList.remove('on')); pull.classList.remove('show', 'playing'); clearTimeout(vt); pVid.pause(); }
 
@@ -117,4 +126,77 @@ window.IMG_R = {"assets/others/graphic/01.jpg": 1.4111, "assets/others/graphic/b
   addEventListener('keydown', e => { if (V.hidden) return; if (e.key === 'Escape') close(); if (e.key === 'ArrowRight') step(1); if (e.key === 'ArrowLeft') step(-1); });
   let tx = 0; V.addEventListener('touchstart', e => tx = e.touches[0].clientX, { passive: true });
   V.addEventListener('touchend', e => { const d = e.changedTouches[0].clientX - tx; if (Math.abs(d) > 50) step(d < 0 ? 1 : -1); });
+
+  // ---------- click: the book is pulled off the shelf, comes forward, and opens; pages turn like a real book ----------
+  const RD = document.createElement('div'); RD.className = 'reader'; RD.hidden = true;
+  RD.innerHTML = '<button class="rd-x" aria-label="Close">Close</button><div class="rd-book"><div class="rd-pages"><div class="rd-p l"></div><div class="rd-p r"></div></div>'
+    + '<div class="rd-leaf"><div class="lf-f"></div><div class="lf-b"></div></div>'
+    + '<div class="rd-lid"><div class="face"><span class="no"></span><b class="kr"></b><span class="ln"></span><i class="fs"></i></div><div class="back"></div></div></div>'
+    + '<div class="rd-nav"><button class="rd-prev" aria-label="Previous">←</button><span class="rd-cnt"></span><button class="rd-next" aria-label="Next">→</button></div>';
+  document.body.appendChild(RD);
+  const rb = RD.querySelector('.rd-book'), lid = RD.querySelector('.rd-lid'), leaf = RD.querySelector('.rd-leaf'), PL = RD.querySelector('.rd-p.l'), PR = RD.querySelector('.rd-p.r');
+  let bk = null, items = [], sp = 0, per = 2, from = null, busy = false;
+  const page = it => !it ? '' : it.title ? `<div class="rd-tp"><span class="no">${String(it.no).padStart(2, '0')}</span><i>${SHAPE_SVG(KIND[it.title.kind][0], KIND[it.title.kind][1])}</i><b class="kr">${it.title.info[0]}</b><span>${it.title.info[1]}</span></div>` : it.video ? (ytId(it.video) ? `<iframe class="${/shorts/.test(it.video) ? 'tall' : ''}" src="https://www.youtube.com/embed/${ytId(it.video)}?rel=0&playsinline=1" allow="autoplay; fullscreen; encrypted-media" allowfullscreen></iframe>` : `<video src="${it.video}" controls playsinline></video>`) : `<img src="${it.img}" alt="">`;
+  function size() {
+    per = innerWidth < 760 ? 1 : 2;
+    const H = Math.min(innerHeight * .74, 660), P = Math.min(per === 2 ? (innerWidth * .86) / 2 : innerWidth * .84, H / 1.3);
+    rb.style.setProperty('--P', P + 'px'); rb.style.setProperty('--H', H + 'px'); RD.classList.toggle('single', per === 1);
+  }
+  function fill() {
+    const a = items[sp * per], b2 = per === 2 ? items[sp * per + 1] : null;
+    if (per === 2) { PL.innerHTML = page(a); PR.innerHTML = page(b2); } else { PR.innerHTML = page(a); PL.innerHTML = ''; }
+    const n = Math.ceil(items.length / per);
+    RD.querySelector('.rd-cnt').textContent = `${String(sp + 1).padStart(2, '0')} / ${String(n).padStart(2, '0')}`;
+    RD.querySelector('.rd-prev').style.visibility = sp > 0 ? 'visible' : 'hidden'; RD.querySelector('.rd-next').style.visibility = sp < n - 1 ? 'visible' : 'hidden';
+  }
+  function openBook(i, b) {
+    const w = OTHERS[i]; bk = b; from = b.getBoundingClientRect(); sp = 0; busy = true;
+    items = (w.images || []).map(img => ({ img })); if (w.video) items.push({ video: w.video }); if (!items.length && w.poster) items.push({ img: w.poster });
+    if (innerWidth >= 760) items.unshift({ title: w, no: i + 1 });   // the first left page is a title page, like the inside of a cover
+    preload(w); size();
+    rb.style.setProperty('--c', b.style.getPropertyValue('--c')); rb.style.color = ''; lid.querySelector('.face').style.color = b.style.color;
+    lid.querySelector('.no').textContent = String(i + 1).padStart(2, '0'); lid.querySelector('b').textContent = w.info ? w.info[0] : ''; lid.querySelector('.ln').textContent = w.info ? w.info[1] : '';
+    lid.querySelector('.fs').innerHTML = SHAPE_SVG(KIND[w.kind][0], b.style.color);
+    fill(); RD.hidden = false; RD.className = 'reader' + (per === 1 ? ' single' : ''); b.classList.add('gone'); document.body.style.overflow = 'hidden';
+    // 1 · the spine leaves the shelf: start the closed book on top of the spine, then fly to the centre
+    const r = rb.getBoundingClientRect(), P = parseFloat(rb.style.getPropertyValue('--P')), H = parseFloat(rb.style.getPropertyValue('--H'));
+    const cx = r.left + r.width / 2 + (per === 2 ? P / 2 : 0), cy = r.top + r.height / 2;     // centre of the closed book (right page)
+    const sx = from.width / P, sy = from.height / H;
+    rb.style.transition = 'none';
+    rb.style.transform = `translate(${from.left + from.width / 2 - cx + (per === 2 ? -P / 2 : 0)}px, ${from.top + from.height / 2 - cy}px) scale(${sx}, ${sy})`;
+    void rb.offsetWidth; RD.classList.add('in');
+    rb.style.transition = 'transform .55s cubic-bezier(.3,.7,.15,1)'; rb.style.transform = per === 2 ? `translateX(${-P / 2}px)` : 'none';
+    // 2 · the cover swings open
+    setTimeout(() => { RD.classList.add('open'); if (per === 2) rb.style.transform = 'none'; }, 560);
+    setTimeout(() => { busy = false; }, 1100);
+  }
+  function turn(d) {
+    const n = Math.ceil(items.length / per); if (busy || sp + d < 0 || sp + d >= n) return; busy = true;
+    const nxt = sp + d, a = items[nxt * per], b2 = per === 2 ? items[nxt * per + 1] : null;
+    const F = leaf.querySelector('.lf-f'), B = leaf.querySelector('.lf-b');
+    leaf.className = 'rd-leaf ' + (d > 0 ? 'fwd' : 'bwd');
+    if (per === 1) { F.innerHTML = PR.innerHTML; B.innerHTML = ''; PR.innerHTML = page(a); }
+    else if (d > 0) { F.innerHTML = PR.innerHTML; B.innerHTML = page(a); PR.innerHTML = page(b2); }
+    else { F.innerHTML = PL.innerHTML; B.innerHTML = page(b2); PL.innerHTML = page(a); }
+    void leaf.offsetWidth; leaf.classList.add('go');
+    setTimeout(() => { sp = nxt; fill(); leaf.className = 'rd-leaf'; F.innerHTML = B.innerHTML = ''; busy = false; }, 520);
+  }
+  function closeBook() {
+    if (RD.hidden || busy) return; busy = true; RD.querySelectorAll('video').forEach(v => v.pause());
+    RD.classList.remove('open');
+    const P = parseFloat(rb.style.getPropertyValue('--P')), H = parseFloat(rb.style.getPropertyValue('--H'));
+    setTimeout(() => {
+      const f = bk.getBoundingClientRect(), r = rb.getBoundingClientRect();
+      const cx = r.left + r.width / 2 + (per === 2 ? P / 2 : 0), cy = r.top + r.height / 2;
+      rb.style.transform = `translate(${f.left + f.width / 2 - cx + (per === 2 ? -P / 2 : 0)}px, ${f.top + f.height / 2 - cy}px) scale(${f.width / P}, ${f.height / H})`;
+      RD.classList.remove('in');
+    }, 380);
+    setTimeout(() => { RD.hidden = true; bk.classList.remove('gone'); document.body.style.overflow = ''; PL.innerHTML = PR.innerHTML = ''; rb.style.transform = ''; busy = false; }, 950);
+  }
+  RD.querySelector('.rd-next').onclick = () => turn(1); RD.querySelector('.rd-prev').onclick = () => turn(-1); RD.querySelector('.rd-x').onclick = closeBook;
+  RD.addEventListener('click', e => { if (e.target === RD) closeBook(); });
+  rb.addEventListener('click', e => { if (!RD.classList.contains('open') || e.target.closest('video,iframe')) return; const r = rb.getBoundingClientRect(); turn(e.clientX > r.left + r.width / 2 ? 1 : -1); });
+  addEventListener('keydown', e => { if (RD.hidden) return; if (e.key === 'Escape') closeBook(); if (e.key === 'ArrowRight') turn(1); if (e.key === 'ArrowLeft') turn(-1); });
+  let rtx = 0; RD.addEventListener('touchstart', e => rtx = e.touches[0].clientX, { passive: true });
+  RD.addEventListener('touchend', e => { const d = e.changedTouches[0].clientX - rtx; if (Math.abs(d) > 50) turn(d < 0 ? 1 : -1); });
 })();
