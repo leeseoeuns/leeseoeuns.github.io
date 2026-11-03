@@ -823,3 +823,9 @@ html.arr-w::after{content:"";position:fixed;inset:0;z-index:899;background:var(-
 .side .live,.end .live{background:transparent;color:var(--ink);border:1px solid color-mix(in srgb,var(--ink) 25%,transparent);font-size:12px;padding:7px 13px}
 .side .live:hover,.end .live:hover{color:var(--paper)}
 .side .live::before,.end .live::before{background:var(--ink)}
+/* room rail v3: only ← Archive stays on top; title, meta, site button, index and modes all sit at the bottom */
+@media (min-width:901px){
+  html.room:not(.try) .side > div:first-of-type{margin-top:auto}
+  html.room:not(.try) .side .room-no{margin-top:0}
+  html.room:not(.try) .side .chapters{margin-top:6px}
+}
