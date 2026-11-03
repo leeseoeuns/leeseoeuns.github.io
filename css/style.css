@@ -807,3 +807,19 @@ html.arr-w::after{content:"";position:fixed;inset:0;z-index:899;background:var(-
 .reader.in{background:rgba(17,17,17,.9)}
 .rd-x{top:20px;z-index:2}
 .reader{gap:14px}
+/* ---------- room index v2: the index sits at the bottom of the rail, small and colourless — the pages are the star ---------- */
+.side .chapters{margin-top:auto;font-size:11px;gap:4px}
+.side .chapters button{padding:2px 0;gap:8px;color:color-mix(in srgb,var(--ink) 42%,transparent)}
+.side .chapters button:hover{color:var(--ink);transform:none}
+.side .chapters .ph{color:color-mix(in srgb,var(--ink) 42%,transparent);font-weight:400}
+.side .chapters .ph .n{width:38px;color:inherit}
+.side .chapters .part.open .ph,.side .chapters button.on{color:var(--ink);font-weight:600}
+.side .chapters button.on .n::before{content:none}
+.side .chapters .chs button{font-size:11px;padding-left:12px}
+.side .chapters .chs button .n{width:22px}
+.side .modebar{flex-direction:row;flex-wrap:wrap;gap:6px}
+.side .modebar .pill{padding:5px 11px;font-size:11px;gap:7px}
+.side .modebar .pill .dot{width:5px;height:5px}
+.side .live,.end .live{background:transparent;color:var(--ink);border:1px solid color-mix(in srgb,var(--ink) 25%,transparent);font-size:12px;padding:7px 13px}
+.side .live:hover,.end .live:hover{color:var(--paper)}
+.side .live::before,.end .live::before{background:var(--ink)}
