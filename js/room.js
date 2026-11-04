@@ -173,7 +173,7 @@
       el.style.width = w * u + 'px'; el.querySelector('.sc').style.height = h * u + 'px';
       el.querySelector('.sc').style.borderRadius = (6 + 33 * (1 - a)) * u + 'px';
       el.querySelector('.lb').style.top = ((640 - h) / -2 + 640 + 47) * u + 'px';
-      el.classList.toggle('on', a < .5); el.style.visibility = Math.abs(d) > 4.2 ? 'hidden' : '';
+      el.classList.toggle('on', a < .15); el.style.visibility = Math.abs(d) > 4.2 ? 'hidden' : '';
     });
     const ease = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
     const tick = now => { if (!running) return;

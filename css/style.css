@@ -863,3 +863,7 @@ html.arr-w::after{content:"";position:fixed;inset:0;z-index:899;background:var(-
 .carousel .lb span{font-size:calc(var(--u)*14);line-height:1.6;color:rgba(17,17,17,.6)}
 .carousel .cs.on .lb b{font-size:calc(var(--u)*22)}
 .carousel .bezel{position:absolute;left:calc(var(--u)*810);top:calc(var(--u)*30);width:calc(var(--u)*300);height:calc(var(--u)*639);border:calc(var(--u)*6) solid #111;border-radius:calc(var(--u)*44);box-shadow:0 calc(var(--u)*30) calc(var(--u)*60) rgba(0,0,0,.25),inset 0 0 0 calc(var(--u)*1) #111;pointer-events:none;box-sizing:border-box}
+/* only the screen inside the phone shows its caption */
+.carousel .lb{opacity:0;transform:translateY(calc(var(--u)*8));transition:opacity .35s ease,transform .45s var(--ease);align-items:center;text-align:center}
+.carousel .cs.on .lb{opacity:1;transform:none;transition-delay:.15s}
+.carousel .cs.on .lb i{font-size:calc(var(--u)*18)}.carousel .cs.on .lb b{font-size:calc(var(--u)*32)}.carousel .cs.on .lb span{font-size:calc(var(--u)*20);white-space:nowrap}
