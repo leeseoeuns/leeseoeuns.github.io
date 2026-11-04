@@ -1263,7 +1263,41 @@ window.ROOMS = [
    {
     "t": "Role & Result",
     "src": "assets/works/07/16.jpg",
-    "r": 0.75
+    "r": 0.75,
+    "layers": {
+     "bg": "assets/works/07/16bg.jpg",
+     "w": 0,
+     "items": [
+      [
+       "assets/works/07/ly/16-1.webp",
+       14.456,
+       30.99,
+       "u",
+       29.427
+      ],
+      [
+       "assets/works/07/ly/16-3.webp",
+       56.682,
+       28.916,
+       "u",
+       30.417
+      ],
+      [
+       "assets/works/07/ly/16-2.webp",
+       37.601,
+       25.446,
+       "u",
+       24.844
+      ],
+      [
+       "assets/works/07/ly/16-wm.webp",
+       5.104,
+       78.194,
+       "s",
+       32.083
+      ]
+     ]
+    }
    }
   ],
   "parts": [

@@ -22,11 +22,12 @@
     if (p.layers) {
       const L = p.layers; im.src = L.bg + '?v=8'; f.classList.add('lay');
       const side = d => L.items.filter(it => it[3] === d);
-      L.items.forEach(([src, x, y, d]) => {
+      L.items.forEach(([src, x, y, d, iw]) => {
         const ly = new Image(); ly.className = 'ly from-' + d; ly.src = src + '?v=1'; ly.alt = ''; ly.decoding = 'async'; ly.loading = 'lazy';
-        const g = side(d), k = g.findIndex(it => it[0] === src);
-        const lead = d === 'l' ? g.length - 1 - k : k;            // the phone nearest the middle arrives first
-        ly.style.cssText = `left:${x}%;top:${y}%;width:${L.w}%;transition-delay:${(lead * .09).toFixed(2)}s`;
+        const w = iw || L.w, g = side(d), k = g.findIndex(it => it[0] === src);
+        // the phone nearest the middle arrives first
+        const lead = d === 'u' ? g.map(it => Math.abs(it[1] + (it[4] || L.w) / 2 - 50)).sort((a, b) => a - b).indexOf(Math.abs(x + w / 2 - 50)) : d === 'l' ? g.length - 1 - k : k;
+        ly.style.cssText = `left:${x}%;top:${y}%;width:${w}%;transition-delay:${(lead * (d === 'u' ? .14 : .09)).toFixed(2)}s`;
         f.appendChild(ly);
       });
     }

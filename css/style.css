@@ -930,3 +930,7 @@ html.arr-w::after{content:"";position:fixed;inset:0;z-index:899;background:var(-
   .shelf.pile .lb span{font-size:11px;line-height:1.45;color:var(--mute)}
   .shelf.pile .bookend{display:none}
 }
+/* rise from below and settle with a small bounce ("팅") */
+.page img.ly.from-u{transform:translateY(60%);transition:transform .95s cubic-bezier(.3,1.45,.5,1),opacity .45s ease}
+.page.go img.ly.from-u{transform:none}
+.page img.ly.from-s,.page.seen img.ly.from-s{opacity:1;transform:none;transition:none}
