@@ -31,7 +31,7 @@ window.IMG_R = {"assets/others/graphic/01.jpg": 1.4111, "assets/others/graphic/b
   const hasImg = w => w.images && w.images.length;
   const tint = (w, op) => `color-mix(in srgb, ${colOf(w)} ${op}%, var(--paper))`;
 
-  // ---------- bookshelf: every work is a book; hover pulls it out and its cover turns toward you ----------
+  // ---------- bookshelf: every work is a book; hover turns it on the shelf so its cover faces you ----------
   const BW = { package: 96, surface: 62, graphic: 76, motion: 84, textile: 70 };      // spine width by category
   const BH = [340, 316, 300, 332, 346, 310, 324, 296, 314, 340, 328, 304];          // spine heights (repeat)
   const SHADE = [0, 14, 0, 22, 8, 0, 18, 0, 10, 0, 20, 6];                          // mix a little paper in so neighbours differ
@@ -41,66 +41,77 @@ window.IMG_R = {"assets/others/graphic/01.jpg": 1.4111, "assets/others/graphic/b
   const head = document.createElement('header'); head.className = 'sh-head';
   head.innerHTML = '<h1>Others</h1><p class="kr">무슨 책을 읽으실 건가요?</p>';
   const shelf = document.createElement('div'); shelf.className = 'shelf';
-  const pull = document.createElement('div'); pull.className = 'pull'; pull.setAttribute('aria-hidden', 'true');
-  // an open book: the front cover swings open to the left (its inside = page 1), the right page = page 2
-  pull.innerHTML = '<div class="hb"><div class="hb-front"><img alt=""><video muted loop playsinline preload="none"></video><div class="band"><span class="ln"></span><b class="kr"></b><i></i></div></div><div class="hb-edge"></div></div>';
-  g.append(head, shelf, pull);
+  g.append(head, shelf);
   // shelf order (set by hand). Series stand together: the three scarves, the two ties (Orange → Blue),
   // and the two weavings. Otherwise no two same-colour spines side by side, and blue never next to sky. Indices point into OTHERS.
   const ORDER = [0, 1, 2, 3, 4, 6, 7, 8, 5, 11, 9, 10].filter(i => OTHERS[i]);
   OTHERS.forEach((w, i) => ORDER.includes(i) || ORDER.push(i));   // a newly added work goes to the end
   const NO = {}; ORDER.forEach((i, k) => NO[i] = k + 1);
+  // every book is a small 3D box: the spine faces out, the front cover is hinged on the spine's right edge.
+  // Desktop: hover turns the book on the shelf so the cover faces you. Mobile: the books lie flat in a pile and the top cover shows.
+  const fine = matchMedia('(hover:hover)').matches;
+  const isWide = () => innerWidth > 900;
   const books = ORDER.map(i => [OTHERS[i], i]).map(([w, i]) => {
     const b = document.createElement('button'); b.className = 'bk'; b.type = 'button';
     b.style.setProperty('--c', `color-mix(in srgb, ${colOf(w)} ${w.col ? 100 : 100 - SHADE[(NO[i] - 1) % SHADE.length]}%, #F3F1EC)`); b.style.color = ink(w);
     b.dataset.w = BW[w.kind]; b.dataset.h = BH[(NO[i] - 1) % BH.length];
     b.setAttribute('aria-label', w.info ? w.info.join(' — ') : 'work ' + (i + 1));
-    b.innerHTML = `<span class="no">${String(NO[i]).padStart(2, '0')}</span><span class="tt kr">${w.info ? w.info[0] : ''}</span><span class="sh">${SHAPE_SVG(KIND[w.kind][0], ink(w))}</span>`;
-    b.addEventListener('click', () => { hide(); openBook(i, b); });
-    if (matchMedia('(hover:hover)').matches) { b.addEventListener('pointerenter', () => { preload(w); show(i, b); }); b.addEventListener('pointerleave', hide); b.addEventListener('focus', () => show(i, b)); b.addEventListener('blur', hide); }
+    const sv = w.video && /\.mp4$/.test(w.video);
+    b.innerHTML = `<span class="bx"><span class="sp"><span class="no">${String(NO[i]).padStart(2, '0')}</span><span class="tt kr">${w.info ? w.info[0] : ''}</span><span class="sh">${SHAPE_SVG(KIND[w.kind][0], ink(w))}</span></span>`
+      + `<span class="fc"><img alt="" loading="lazy" decoding="async" src="${coverSrc(w)}">${sv ? '<video muted loop playsinline preload="none"></video>' : ''}<span class="band"><span class="ln"></span><b class="kr"></b><i></i></span></span></span>`
+      + `<span class="lb"><b class="kr">${w.info ? w.info[0] : ''}</b><span class="kr">${w.info ? w.info[1] : ''}</span></span>`;
+    fillBand(b.querySelector('.fc'), w);
+    b.addEventListener('click', () => { shut(b); openBook(i, b); });
+    if (fine) { b.addEventListener('pointerenter', () => { if (isWide()) { preload(w); lean(b, w); } }); b.addEventListener('pointerleave', () => shut(b)); b.addEventListener('focus', () => isWide() && lean(b, w)); b.addEventListener('blur', () => shut(b)); }
     return b;
   });
-  // fill the shelves: as many books per row as fit (max 10), a category shape as the bookend
+  // hover: the book turns on the spot (spine slants away to the left, the cover comes round); its neighbours make room
+  let vt;
+  function lean(b, w) {
+    books.forEach(x => x !== b && shut(x));
+    b.classList.add('on'); clearTimeout(vt);
+    const v = b.querySelector('video'); if (v) vt = setTimeout(() => { v.src = w.video; v.play().catch(() => {}); b.classList.add('playing'); }, 3000);   // motion plays after a 3s hover
+  }
+  function shut(b) { if (!b.classList.contains('on')) return; b.classList.remove('on', 'playing'); clearTimeout(vt); const v = b.querySelector('video'); if (v) { v.pause(); v.removeAttribute('src'); v.load(); } }
+  const A = 66 * Math.PI / 180;                                    // how far the book turns
+  // fill the shelves: as many books per row as fit (room is kept for one open cover), a category shape as the bookend
   const ENDS = [['square', C.ink], ['quarter', C.lav], ['circle', C.blue], ['triangle', C.pink]];
   function build() {
-    const wide = innerWidth > 900, s = wide ? 1 : .72, gap = wide ? 8 : 5, room = shelf.clientWidth - (wide ? 160 : 70);
-    shelf.innerHTML = ''; let row = null, used = 0, n = 0, r = 0;
-    const fit = Math.max(3, Math.min(10, Math.floor(room / ((70 * s) + gap)))), per = wide ? Math.min(fit, Math.max(8, Math.ceil(books.length / Math.ceil(books.length / fit)))) : Math.ceil(books.length / Math.ceil(books.length / fit));   // 8–10 books a shelf on desktop
+    const wide = isWide(); shelf.innerHTML = ''; shelf.classList.toggle('pile', !wide);
+    if (!wide) {   // mobile: one pile, books lying flat, the title beside each
+      books.forEach(b => { const t = Math.round(+b.dataset.w * .42); ['width', 'height', '--sw', '--h', '--cw', '--ow'].forEach(k => b.style.removeProperty(k)); b.style.setProperty('--t', t + 'px'); shelf.appendChild(b); });
+      tilt(); return;
+    }
+    const gap = 8, CWR = .72, room = shelf.clientWidth - 160 - Math.round(346 * CWR * Math.sin(A));
+    let row = null, used = 0, n = 0, r = 0;
+    const fit = Math.max(3, Math.min(10, Math.floor(room / (70 + gap)))), per = Math.ceil(books.length / Math.ceil(books.length / fit));
     const newRow = () => { if (row) end(); row = document.createElement('div'); row.className = 'shelf-row'; shelf.appendChild(row); used = 0; n = 0; };
     const end = () => { const e = document.createElement('span'); const [k, c] = ENDS[r++ % ENDS.length]; e.className = 'bookend ' + k; e.innerHTML = SHAPE_SVG(k, c); row.appendChild(e); };
     books.forEach(b => {
-      const w = +b.dataset.w * s, h = +b.dataset.h * s;
+      const w = +b.dataset.w, h = +b.dataset.h, cw = Math.round(h * CWR);
       if (!row || used + w > room || n >= per) newRow();
-      b.style.width = w + 'px'; b.style.height = h + 'px'; row.appendChild(b); used += w + gap; n++;
+      b.style.width = ''; b.style.setProperty('--sw', w + 'px'); b.style.setProperty('--h', h + 'px'); b.style.setProperty('--cw', cw + 'px');
+      b.style.setProperty('--ow', Math.round(w * Math.cos(A) + cw * Math.sin(A) + 6) + 'px');
+      row.appendChild(b); used += w + gap; n++;
       const tt = b.querySelector('.tt'), sh = b.querySelector('.sh'); tt.style.fontSize = ''; const max = sh.offsetTop - tt.offsetTop - 8;   // title must end above the shape
-      for (let f = wide ? 13 : 11; tt.scrollHeight > max && f > 8; f--) tt.style.fontSize = f - 1 + 'px';
+      for (let f = 13; tt.scrollHeight > max && f > 8; f--) tt.style.fontSize = f - 1 + 'px';
     });
     end();
   }
+  // mobile pile: the book at the middle of the screen is seen edge-on; above and below it, more of the top cover shows
+  let tq = 0;
+  function tilt() {
+    tq = 0; if (isWide()) return; const H = innerHeight, mid = H * .5;
+    books.forEach(b => { const r = b.getBoundingClientRect(); if (r.bottom < -200 || r.top > H + 200) return;
+      const d = Math.min(1, Math.abs(r.top + r.height / 2 - mid) / (H * .5)); b.style.setProperty('--tilt', (4 + d * 24).toFixed(1) + 'deg'); });
+  }
+  addEventListener('scroll', () => { if (!tq) tq = requestAnimationFrame(tilt); }, { passive: true });
   build(); if (document.fonts) document.fonts.ready.then(build);   // re-fit spine titles once the web font has loaded
-  let rt; addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(build, 120); });
+  let rt, lastWide = isWide(); addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => { build(); lastWide = isWide(); }, 120); });
   requestAnimationFrame(() => g.classList.add('in'));
 
-  // the pulled book, standing: its front cover is the work, with a white belly band carrying the title
-  const pImg = pull.querySelector('img'), pVid = pull.querySelector('video'); let vt;
-  const fillBand = (el, w) => { el.querySelector('.ln').textContent = w.info ? w.info[1] : ''; el.querySelector('b').textContent = w.info ? w.info[0] : ''; el.querySelector('i').innerHTML = SHAPE_SVG(KIND[w.kind][0], colOf(w)); };
-  function show(i, b) {
-    const w = OTHERS[i], src = coverSrc(w);
-    books.forEach(x => x.classList.toggle('on', x === b));
-    pull.classList.remove('show'); void pull.offsetWidth;
-    pull.style.setProperty('--c', b.style.getPropertyValue('--c'));
-    const cw = innerWidth > 900 ? 210 : 150, ch = Math.round(cw * 1.42);
-    pull.style.setProperty('--cw', cw + 'px'); pull.style.setProperty('--ch', ch + 'px');
-    pImg.src = src; fillBand(pull, w);
-    pVid.removeAttribute('src'); pVid.load(); pull.classList.remove('playing'); clearTimeout(vt);
-    if (w.video && /\.mp4$/.test(w.video)) vt = setTimeout(() => { pVid.src = w.video; pVid.play().catch(() => {}); pull.classList.add('playing'); }, 3000);   // motion plays after a 3s hover
-    const gr = g.getBoundingClientRect(), br = b.getBoundingClientRect(), W = cw + 26;
-    let x = br.right - gr.left + 16, flip = false; if (x + W > gr.width - 10) { x = br.left - gr.left - W - 16; flip = true; }
-    const y = br.top - gr.top - 36 + br.height - ch;                 // stands on the same shelf line as the lifted spine
-    pull.style.left = x + 'px'; pull.style.top = Math.max(y, 90) + 'px'; pull.classList.toggle('flip', flip);
-    requestAnimationFrame(() => pull.classList.add('show'));
-  }
-  function hide() { books.forEach(x => x.classList.remove('on')); pull.classList.remove('show', 'playing'); clearTimeout(vt); pVid.pause(); }
+  // the cover: the work, with a white belly band carrying the title
+  function fillBand(el, w) { el.querySelector('.ln').textContent = w.info ? w.info[1] : ''; el.querySelector('b').textContent = w.info ? w.info[0] : ''; el.querySelector('i').innerHTML = SHAPE_SVG(KIND[w.kind][0], colOf(w)); }
 
   // viewer
   const V = $('viewer'), stage = $('vStage'), dots = $('vDots'), vinfo = $('vInfo'); let wi = 0, si = 0;
@@ -150,7 +161,7 @@ window.IMG_R = {"assets/others/graphic/01.jpg": 1.4111, "assets/others/graphic/b
     RD.querySelector('.rd-prev').style.visibility = sp > 0 ? 'visible' : 'hidden'; RD.querySelector('.rd-next').style.visibility = sp < n - 1 ? 'visible' : 'hidden';
   }
   function openBook(i, b) {
-    const w = OTHERS[i]; bk = b; from = b.getBoundingClientRect(); sp = 0; busy = true;
+    const w = OTHERS[i]; bk = b; from = b.querySelector('.bx').getBoundingClientRect(); sp = 0; busy = true;
     items = (w.images || []).map(img => ({ img })); if (w.video) items.push({ video: w.video }); if (!items.length && w.poster) items.push({ img: w.poster });
     if (innerWidth >= 760) items.unshift({ title: w, no: NO[i] });   // the first left page is a title page, like the inside of a cover
     preload(w); size();
@@ -185,7 +196,7 @@ window.IMG_R = {"assets/others/graphic/01.jpg": 1.4111, "assets/others/graphic/b
     RD.classList.remove('open');
     const P = parseFloat(rb.style.getPropertyValue('--P')), H = parseFloat(rb.style.getPropertyValue('--H'));
     setTimeout(() => {
-      const f = bk.getBoundingClientRect(), r = rb.getBoundingClientRect();
+      const f = bk.querySelector('.bx').getBoundingClientRect(), r = rb.getBoundingClientRect();
       const cx = r.left + r.width / 2 + (per === 2 ? P / 2 : 0), cy = r.top + r.height / 2;
       rb.style.transform = `translate(${f.left + f.width / 2 - cx + (per === 2 ? -P / 2 : 0)}px, ${f.top + f.height / 2 - cy}px) scale(${f.width / P}, ${f.height / H})`;
       RD.classList.remove('in');

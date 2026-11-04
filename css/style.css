@@ -875,3 +875,58 @@ html.arr-w::after{content:"";position:fixed;inset:0;z-index:899;background:var(-
 .page img.ly.from-b{transform:translateY(40%)}
 .page.go img.ly{opacity:1;transform:none}
 @media (prefers-reduced-motion:reduce){.page img.ly,.page.seen img.ly{opacity:1;transform:none;transition:none}}
+/* ---------- Others · bookshelf v2: every book is a 3D box (spine + front cover) ---------- */
+.pull{display:none}
+.bk{display:block;padding:0;background:none;border-radius:0;box-shadow:none;transform:none;overflow:visible;color:inherit}
+.bk::before,.bk::after{display:none}
+.bk:hover,.bk.on,.bk:focus-visible{transform:none;box-shadow:none}
+.bk .sp{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:22px 0 16px;border-radius:3px;background:var(--c);
+  box-shadow:inset -3px 0 0 rgba(0,0,0,.08),inset 3px 0 0 rgba(255,255,255,.08);backface-visibility:hidden}
+.bk .sp::before,.bk .sp::after{content:"";position:absolute;left:0;right:0;height:2px;background:currentColor;opacity:.3}
+.bk .sp::before{top:14px}.bk .sp::after{bottom:30px}
+.bk .fc{position:absolute;overflow:hidden;background:var(--c);backface-visibility:hidden}
+.bk .fc>img,.bk .fc>video{position:absolute;left:0;top:0;width:100%;height:76%;object-fit:cover;display:block;max-width:none}
+.bk .fc>video{opacity:0;transition:opacity .4s}.bk.playing .fc>video{opacity:1}
+.bk .fc .band{height:24%}
+.bk .lb{display:none}
+/* desktop: the book turns on the spot */
+@media (min-width:901px){
+  .shelf-row{gap:8px}
+  .bk{width:var(--sw);height:var(--h);perspective:1100px;perspective-origin:0 45%;transition:width .62s cubic-bezier(.3,.7,.2,1)}
+  .bk .bx{position:absolute;left:0;bottom:0;width:var(--sw);height:var(--h);transform-style:preserve-3d;transform-origin:0 50%;transition:transform .62s cubic-bezier(.3,.7,.2,1)}
+  .bk .sp::marker{display:none}
+  .bk .sp>*{position:relative}
+  .bk .sp .no{position:absolute}
+  .bk .shade{display:none}
+  .bk .fc{left:100%;top:0;width:var(--cw);height:100%;transform-origin:0 50%;transform:rotateY(90deg);border-radius:0 4px 4px 0;box-shadow:inset 6px 0 8px -4px rgba(0,0,0,.28)}
+  .bk .fc::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.35),rgba(0,0,0,.08));opacity:1;transition:opacity .62s;pointer-events:none}
+  .bk .sp .sp-dim{display:none}
+  .bk .bx::after{content:"";position:absolute;inset:0;border-radius:3px;background:linear-gradient(90deg,rgba(0,0,0,.08),rgba(0,0,0,.3));opacity:0;transition:opacity .62s;pointer-events:none;backface-visibility:hidden}
+  .bk.on{width:var(--ow);z-index:2}
+  .bk.on .bx{transform:rotateY(-66deg)}
+  .bk.on .fc::after{opacity:0}
+  .bk.on .bx::after{opacity:1}
+  .bk.on .fc{filter:drop-shadow(12px 4px 14px rgba(0,0,0,.2))}
+}
+/* mobile: a pile of books lying flat; the top cover tilts into view, the title sits beside */
+@media (max-width:900px){
+  .shelf.pile{display:flex;flex-direction:column;gap:0;padding:30px 0 40px;margin-top:20px}
+  .shelf.pile .bk{display:grid;grid-template-columns:min(46vw,190px) 1fr;column-gap:16px;align-items:end;width:100%;height:auto;text-align:left;padding:0;margin-top:86px}
+  .shelf.pile .bk:first-child{margin-top:70px}
+  .shelf.pile .bx{position:relative;display:block;height:var(--t);perspective:520px;perspective-origin:50% 100%}
+  .shelf.pile .sp{inset:0;flex-direction:row;justify-content:space-between;padding:0 14px 0 22px;border-radius:2px}
+  .shelf.pile .sp::before,.shelf.pile .sp::after{top:0;bottom:0;left:12px;right:auto;width:2px;height:auto}
+  .shelf.pile .sp::after{left:auto;right:12px}
+  .shelf.pile .sp .no{position:static;font-size:10px}
+  .shelf.pile .sp .tt{display:none}
+  .shelf.pile .sp .sh{position:static;width:10px;height:10px;margin-right:10px}
+  .shelf.pile .fc{left:0;right:0;bottom:100%;height:min(48vw,190px);transform-origin:50% 100%;transform:rotateX(calc(90deg - var(--tilt,14deg)));transition:transform .2s linear}
+  .shelf.pile .fc>img{height:100%}
+  .shelf.pile .fc .band{display:none}
+  .shelf.pile .fc::after{content:"";position:absolute;inset:0;background:rgba(0,0,0,.08)}
+  .shelf.pile .bx::after{content:"";position:absolute;left:4px;right:4px;top:100%;height:8px;background:linear-gradient(rgba(0,0,0,.14),rgba(0,0,0,0))}
+  .shelf.pile .lb{display:flex;flex-direction:column;gap:4px;align-self:center;padding-top:0;word-break:keep-all}
+  .shelf.pile .lb b{font-size:13px;font-weight:500;line-height:1.35;color:var(--ink)}
+  .shelf.pile .lb span{font-size:11px;line-height:1.45;color:var(--mute)}
+  .shelf.pile .bookend{display:none}
+}
