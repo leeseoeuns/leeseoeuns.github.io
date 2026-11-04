@@ -146,3 +146,41 @@
     if (current === 'screening') { if (e.key === 'ArrowRight') show(Math.min(N, si + 1)); if (e.key === 'ArrowLeft') show(Math.max(0, si - 1)); if (e.key === ' ') { e.preventDefault(); $('sPlay').click(); } }
   });
 })();
+
+/* Carousel page: the phone frame stays put in the middle while the screens slide left through it (matches the Figma slide) */
+(function () {
+  const book = document.getElementById('book'); if (!book || !window.ROOMS) return;
+  const q = new URLSearchParams(location.search), R = ROOMS.find(r => r.no === (q.get('r') || '01')); if (!R) return;
+  R.pages.forEach((p, i) => {
+    const C = p.carousel; if (!C) return;
+    const fig = book.children[i]; if (!fig) return;
+    const box = document.createElement('div'); box.className = 'carousel'; box.style.top = (C.top * 100) + '%'; box.style.background = C.bg;
+    const N = C.items.length, L = [...C.items, ...C.items];          // doubled so items can enter/leave off-screen
+    const els = L.map(([src, n, h, d]) => { const it = document.createElement('div'); it.className = 'cs';
+      it.innerHTML = `<div class="sc"><img src="${src}?v=1" alt="${h}" loading="lazy" decoding="async"></div><div class="lb"><i>${n}</i><b class="kr">${h}</b><span class="kr">${d}</span></div>`; box.appendChild(it); return it; });
+    const bezel = document.createElement('div'); bezel.className = 'bezel'; box.appendChild(bezel);
+    fig.appendChild(box);
+    const CW = 288, FW = 236, GAP = 26, Y0 = 300 - 270;                // slide px (1920-wide frame)
+    const xOf = d => { const s = Math.sign(d), a = Math.abs(d); return 960 + s * (a <= 1 ? a * (CW / 2 + GAP + FW / 2) : (CW / 2 + GAP + FW / 2) + (a - 1) * (FW + GAP)); };
+    let u = 1; const size = () => { u = fig.clientWidth / 1920; box.style.setProperty('--u', u + 'px'); };
+    size(); addEventListener('resize', size);
+    let pos = 0, from = 0, t0 = 0, running = false, raf = 0;
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const draw = p => els.forEach((el, k) => {
+      let d = ((k - 3 - p) % (2 * N) + 2 * N) % (2 * N); if (d >= N) d -= 2 * N;   // -N..N-1, item 3 sits in the phone at p=0
+      const a = Math.min(1, Math.abs(d)), w = FW + (CW - FW) * (1 - a), x = xOf(d) - w / 2, h = w * 874 / 402;
+      el.style.transform = `translate(${x * u}px, ${(Y0 + (640 - h) / 2) * u}px)`;
+      el.style.width = w * u + 'px'; el.querySelector('.sc').style.height = h * u + 'px';
+      el.querySelector('.sc').style.borderRadius = (6 + 33 * (1 - a)) * u + 'px';
+      el.querySelector('.lb').style.top = ((640 - h) / -2 + 640 + 47) * u + 'px';
+      el.classList.toggle('on', a < .5); el.style.visibility = Math.abs(d) > 4.2 ? 'hidden' : '';
+    });
+    const ease = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+    const tick = now => { if (!running) return;
+      const e = now - t0, HOLD = 1800, MOVE = 800;
+      if (e > HOLD) { const k = Math.min(1, (e - HOLD) / MOVE); pos = from + ease(k); if (k >= 1) { from = (from + 1) % (2 * N); pos = from; t0 = now; } }
+      draw(pos); raf = requestAnimationFrame(tick); };
+    draw(0);
+    if (!reduce) new IntersectionObserver(es => es.forEach(en => { running = en.isIntersecting; cancelAnimationFrame(raf); if (running) { t0 = performance.now(); raf = requestAnimationFrame(tick); } })).observe(fig);
+  });
+})();
