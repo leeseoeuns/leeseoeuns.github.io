@@ -934,3 +934,13 @@ html.arr-w::after{content:"";position:fixed;inset:0;z-index:899;background:var(-
 .page img.ly.from-u{transform:translateY(60%);transition:transform .95s cubic-bezier(.3,1.45,.5,1),opacity .45s ease}
 .page.go img.ly.from-u{transform:none}
 .page img.ly.from-s,.page.seen img.ly.from-s{opacity:1;transform:none;transition:none}
+/* Others · taking a book out and putting it back */
+@media (min-width:901px){
+  .bk.pulled .bx{transform:translateY(-44px) rotateY(-66deg)}
+  .bk.pulled .fc{filter:drop-shadow(14px 16px 20px rgba(0,0,0,.22))}
+}
+@media (max-width:900px){
+  .shelf.pile .bx{transition:transform .38s cubic-bezier(.3,.7,.2,1)}
+  .shelf.pile .bk.pulled .bx{transform:translateX(16%)}
+  .shelf.pile .bk.pulled .fc{transform:rotateX(34deg);transition:transform .38s cubic-bezier(.3,.7,.2,1)}
+}
