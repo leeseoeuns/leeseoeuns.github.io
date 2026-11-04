@@ -829,3 +829,26 @@ html.arr-w::after{content:"";position:fixed;inset:0;z-index:899;background:var(-
   html.room:not(.try) .side .room-no{margin-top:0}
   html.room:not(.try) .side .chapters{margin-top:6px}
 }
+/* room rail v4 — matched to the Figma room frames ('fixed · index'): 320 wide, 48 left, Archive on top, everything else stacked at the bottom */
+@media (min-width:901px){
+  html.room:not(.try){--side:320px}
+  html.room:not(.try) .side{padding:32px 12px 37px 48px;gap:0}
+  html.room:not(.try) .side .back{font-size:16px;line-height:24px;align-self:flex-start}
+  html.room:not(.try) .side > div:first-of-type{margin-top:auto}
+  html.room:not(.try) .side .room-no{margin:0;font-size:16px;line-height:24px;color:color-mix(in srgb,var(--ink) 55%,transparent)}
+  html.room:not(.try) .side h1{margin-top:2px;font-size:24px;line-height:29px;font-weight:700;letter-spacing:0}
+  html.room:not(.try) .side .ko{margin-top:8px;font-size:14px;line-height:21px;color:color-mix(in srgb,var(--ink) 70%,transparent)}
+  html.room:not(.try) .side .meta{margin-top:14px;font-size:12px;line-height:18px;color:color-mix(in srgb,var(--ink) 55%,transparent)}
+  html.room:not(.try) .side .live{margin-top:26px;padding:7px 14px;font-size:12px;line-height:14px}
+  html.room:not(.try) .side .chapters{margin-top:23.5px;gap:0;font-size:11px}
+  html.room:not(.try) .side .chapters button{padding:4.5px 0;line-height:13px;gap:0;color:color-mix(in srgb,var(--ink) 45%,transparent)}
+  html.room:not(.try) .side .chapters button .n{color:color-mix(in srgb,var(--ink) 30%,transparent)}
+  html.room:not(.try) .side .chapters .ph .n{width:48px}
+  html.room:not(.try) .side .chapters .part.open .ph,html.room:not(.try) .side .chapters button.on{color:var(--ink);font-weight:600}
+  html.room:not(.try) .side .chapters .part.open .ph .n,html.room:not(.try) .side .chapters button.on .n{color:color-mix(in srgb,var(--ink) 70%,transparent);font-weight:400}
+  html.room:not(.try) .side .chapters .chs button{padding-left:12px;font-size:11px}
+  html.room:not(.try) .side .chapters .chs button .n{width:36px}
+  html.room:not(.try) .side .modebar{margin-top:16.5px;gap:6px}
+  html.room:not(.try) .side .modebar .pill{padding:5px 11px;font-size:11px;line-height:16.5px;border-color:color-mix(in srgb,var(--ink) 35%,transparent)}
+  html.room:not(.try) .side .modebar .pill .dot{display:none}
+}
