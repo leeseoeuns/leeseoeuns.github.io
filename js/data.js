@@ -1114,7 +1114,7 @@ window.ROOMS = [
    {
     "t": "Recipe & Cooking",
     "src": "assets/works/07/12.jpg",
-    "r": 0.6458
+    "r": 0.9792
    },
    {
     "t": "Passport",
@@ -1124,7 +1124,7 @@ window.ROOMS = [
    {
     "t": "Fridge · Feed · Kitchen",
     "src": "assets/works/07/14.jpg",
-    "r": 0.6458
+    "r": 0.9792
    },
    {
     "t": "Visual System",
