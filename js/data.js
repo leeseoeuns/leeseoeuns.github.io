@@ -934,7 +934,7 @@ window.ROOMS = [
  {
   "no": "07",
   "shape": "star",
-  "en": "Hankki Passport",
+  "en": "One Meal Passport",
   "ko": "세계 요리 키트와 앱 「한 끼 여권」",
   "type": "Personal project · 2026",
   "paper": "#F2F5F1",
@@ -943,7 +943,7 @@ window.ROOMS = [
   "dark": false,
   "docent": {
    "1": [
-    "Hankki Passport\nCooking Kit & App",
+    "One Meal Passport\nCooking Kit & App",
     "요리 초보를 위한 세계 요리 키트와 앱이에요. 나라별 소량 키트로 요리의 문턱을 낮추고, 키트를 받은 다음의 경험까지 앱으로 설계했어요."
    ],
    "2": [
