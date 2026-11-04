@@ -10,7 +10,7 @@
   document.title = `${R.no} ${R.en} — Lee Seoeun`;
   $('roomNo').textContent = 'Room ' + R.no; $('roomEn').textContent = R.en; $('roomKo').textContent = R.ko;
   $('roomMeta').textContent = `${R.type} · ${N} pages`;
-  if (R.link) for (const id of ['roomLink', 'roomLink2']) { const a = $(id); a.href = R.link; a.hidden = false; }
+  if (R.link) for (const id of ['roomLink', 'roomLink2']) { const a = $(id); a.href = R.link; a.hidden = false; if (R.linkLabel) a.textContent = R.linkLabel; }
 
   // ---------- Book: one continuous vertical strip (webtoon) ----------
   const book = $('book'), chapters = $('chapters');
