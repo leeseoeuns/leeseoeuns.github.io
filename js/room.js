@@ -16,9 +16,23 @@
   const book = $('book'), chapters = $('chapters');
   P.forEach((p, i) => {
     const f = document.createElement('figure'); f.className = 'page'; f.id = 'p' + (i + 1); f.style.aspectRatio = `1 / ${p.r}`;
-    const im = new Image(); im.src = p.src + '?v=7'; im.alt = `${R.en} — ${p.t}`; im.loading = i < 2 ? 'eager' : 'lazy'; im.decoding = 'async';
+    const im = new Image(); im.src = p.src + '?v=8'; im.alt = `${R.en} — ${p.t}`; im.loading = i < 2 ? 'eager' : 'lazy'; im.decoding = 'async';
     im.width = 1440; im.height = Math.round(1440 * p.r); f.appendChild(im); book.appendChild(f);
+    // layered page: the phones are separate images that slide in from the sides when the page is reached
+    if (p.layers) {
+      const L = p.layers; im.src = L.bg + '?v=8'; f.classList.add('lay');
+      const side = d => L.items.filter(it => it[3] === d);
+      L.items.forEach(([src, x, y, d]) => {
+        const ly = new Image(); ly.className = 'ly from-' + d; ly.src = src + '?v=1'; ly.alt = ''; ly.decoding = 'async'; ly.loading = 'lazy';
+        const g = side(d), k = g.findIndex(it => it[0] === src);
+        const lead = d === 'l' ? g.length - 1 - k : k;            // the phone nearest the middle arrives first
+        ly.style.cssText = `left:${x}%;top:${y}%;width:${L.w}%;transition-delay:${(lead * .09).toFixed(2)}s`;
+        f.appendChild(ly);
+      });
+    }
   });
+  const go = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('go'); go.unobserve(e.target); } }), { threshold: .22 });
+  book.querySelectorAll('.page.lay').forEach(p => go.observe(p));
   // chapters grouped into parts; only the part being read unfolds
   const parts = R.parts || [['Pages', 1, N]];
   const partOf = i => parts.findIndex(p => i + 1 >= p[1] && i + 1 <= p[2]);
@@ -118,7 +132,7 @@
     if (si >= N) { $('fin').classList.add('show'); return; }
     const p = P[si], w = words(p, si);
     const old = screen.querySelector('img.on'); if (old) { old.classList.remove('on'); setTimeout(() => old.remove(), 1200); }
-    const im = new Image(); im.src = p.src + '?v=7'; im.alt = p.t; screen.appendChild(im);
+    const im = new Image(); im.src = p.src + '?v=8'; im.alt = p.t; screen.appendChild(im);
     requestAnimationFrame(() => im.classList.add('on'));
     sub.firstElementChild.classList.remove('on');
     setTimeout(() => { sub.firstElementChild.textContent = w.b || w.h.replace('\n', ' '); sub.firstElementChild.classList.add('on'); }, 450);

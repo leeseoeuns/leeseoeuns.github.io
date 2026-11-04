@@ -867,3 +867,11 @@ html.arr-w::after{content:"";position:fixed;inset:0;z-index:899;background:var(-
 .carousel .lb{opacity:0;transform:translateY(calc(var(--u)*8));transition:opacity .35s ease,transform .45s var(--ease);align-items:center;text-align:center}
 .carousel .cs.on .lb{opacity:1;transform:none;transition-delay:.15s}
 .carousel .cs.on .lb i{font-size:calc(var(--u)*18)}.carousel .cs.on .lb b{font-size:calc(var(--u)*32)}.carousel .cs.on .lb span{font-size:calc(var(--u)*20);white-space:nowrap}
+/* Room pages with layered phones: they slide in from the sides when the page is reached */
+.page.lay{overflow:hidden}
+.page img.ly,.page.seen img.ly{position:absolute;height:auto;max-width:none;opacity:0;transition:transform 1.15s cubic-bezier(.22,.9,.24,1),opacity .7s ease;will-change:transform}
+.page img.ly.from-l{transform:translateX(-62vw)}
+.page img.ly.from-r{transform:translateX(62vw)}
+.page img.ly.from-b{transform:translateY(40%)}
+.page.go img.ly{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.page img.ly,.page.seen img.ly{opacity:1;transform:none;transition:none}}
